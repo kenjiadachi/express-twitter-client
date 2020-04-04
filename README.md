@@ -1,5 +1,5 @@
-# express-twitter-sample
-Node+ExpressでTwitterでAuthするサンプルプログラムです
+# express-twitter-client
+Node+Expressで作ったTwitterAPIを触る系プログラムです。
 
 
 ## usage

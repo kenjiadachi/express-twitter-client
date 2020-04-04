@@ -51,33 +51,8 @@ passport.use(new TwitterStrategy({
   },
   // 認証後の処理
   function(token, tokenSecret, profile, done) {
-    // tokenを./data/secret.jsonに保存
-    const filepath = '/data/secret.json'
-    let jsonObject = {}
-    if (fs.statSync(__dirname + filepath)) {
-      jsonObject = JSON.parse(fs.readFileSync(__dirname + filepath, 'utf8'));
-      console.log(jsonObject)
-    } else {
-      
-      console.log(jsonObject)
-    }
-    console.log(jsonObject)
-    jsonObject[profile.id] = {
-      token: token,
-      tokenSecret: tokenSecret
-    }
-    // ファイルを書き込む
-    fs.writeFile( __dirname + filepath, JSON.stringify(jsonObject) , (err) => {
-      // 書き出しに失敗した場合
-      if(err){
-        console.log("エラーが発生しました。" + err)
-        throw err
-      }
-      // 書き出しに成功した場合
-      else{
-        console.log("ファイルが正常に書き出しされました")
-      }
-    });
+    // tokenを./data/settings.jsonに保存
+    
     return done(null, profile);
   }
 ));
