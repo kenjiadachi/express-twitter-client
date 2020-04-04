@@ -38,7 +38,7 @@ exports.tokens = function (user_id, token, tokenSecret) {
 
 
 // keywordsを保存する
-exports.keywords = function (keywords, user_id) {
+exports.keywords = function (user_id, keywords) {
   let jsonObject = [];
   if(fs.existsSync(settings)) {
     console.log("settings.json file exists.");
@@ -70,6 +70,39 @@ exports.keywords = function (keywords, user_id) {
 };
 
 // messages, min_followerを保存する
+exports.message = function (user_id, message, minFollower) {
+  let jsonObject = [];
+  if(fs.existsSync(settings)) {
+    console.log("settings.json file exists.");
+    jsonObject = JSON.parse(fs.readFileSync(settings, 'utf8'));
+
+    let search = jsonObject.findIndex((v) => v.id === user_id);
+
+    if(search!=-1){
+      console.log(jsonObject[search].message);
+      jsonObject[search].message = message;
+      jsonObject[search].minFollower = minFollower;
+    }else{
+      jsonObject.push({
+        id: user_id,
+        message: message,
+        minFollower: minFollower
+      });
+    }
+
+  }else {
+    // settings.jsonがないときの処理
+    console.log('settings.json file does not exist');
+    jsonObject.push({
+      id: user_id,
+      message: message,
+      minFollower: minFollower
+    });
+  }
+
+  saveToJson(settings, jsonObject)
+};
+
 
 // 書き出し用の関数
 function saveToJson(filename, object) {
