@@ -38,7 +38,7 @@ exports.tokens = function (user_id, token, tokenSecret) {
 
 
 // keywordsを保存する
-exports.keywords = function save_keywords(keywords,user_id) {
+exports.keywords = function (keywords, user_id) {
   let jsonObject = [];
   if(fs.existsSync(settings)) {
     console.log("settings.json file exists.");
