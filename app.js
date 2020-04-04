@@ -8,6 +8,9 @@ var passport = require('passport');
 var TwitterStrategy = require('passport-twitter').Strategy;
 var config = require('./config');
 const fs = require("fs");
+var twitter = require('./twitter');
+var url = require('url');
+var urlInfo;
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -31,9 +34,12 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+app.all('/api/*', function(request, response, next){
+  // クエリー文字列を含めてurl情報を取得（trueオプションでクエリ文字列も取得）
+  urlInfo = url.parse(request.url, true);
+  // jsonでレスポンス（外部の人もアクセスできるようにAccess-Control-Allow-Originを設定）
+  response.contentType('json');
+  response.header('Access-Control-Allow-Origin', '*');
   next();
 });
 
@@ -93,6 +99,13 @@ app.get('/auth/twitter/callback',
     res.redirect('/success');
   }
 );
+app.get('/api/twitter/search', function(request, response) {
+  twitter.search(urlInfo,
+      function(result){
+          response.send(result);
+      }
+  );
+});
 
 
 
