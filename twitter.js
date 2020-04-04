@@ -1,5 +1,5 @@
-var Twitter = require('twitter');
-var config = require('./config');
+const Twitter = require('twitter');
+const config = require('./config');
 const fs = require("fs");
 
 

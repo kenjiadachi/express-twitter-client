@@ -1,21 +1,24 @@
-var createError = require('http-errors');
-var express = require('express');
-var session = require('express-session');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var passport = require('passport');
-var TwitterStrategy = require('passport-twitter').Strategy;
-var config = require('./config');
+const createError = require('http-errors');
+const express = require('express');
+const session = require('express-session');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const passport = require('passport');
+const TwitterStrategy = require('passport-twitter').Strategy;
+const config = require('./config');
 const fs = require("fs");
-var twitter = require('./twitter');
-var url = require('url');
-var urlInfo;
+const twitter = require('./twitter');
+const url = require('url');
+const saveToJson = require('./func/saveToJson')
+let urlInfo;
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
 
-var app = express();
+let app = express();
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -52,7 +55,7 @@ passport.use(new TwitterStrategy({
   // 認証後の処理
   function(token, tokenSecret, profile, done) {
     // tokenを./data/settings.jsonに保存
-    
+    saveToJson.tokens(profile.id, token, tokenSecret)
     return done(null, profile);
   }
 ));
@@ -89,6 +92,7 @@ app.get('/api/twitter/search', function(request, response) {
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
