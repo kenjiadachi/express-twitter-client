@@ -16,6 +16,7 @@ let urlInfo;
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const keywordsRouter = require('./routes/api/keywords');
+const messagesRouter = require('./routes/api/messages');
 
 let app = express();
 
@@ -73,6 +74,7 @@ app.use('/', indexRouter);
 app.use('/success', usersRouter);
 
 app.use('/api/keywords', keywordsRouter);
+app.use('/api/messages', messagesRouter);
 
 // 認証周り
 app.get('/auth/twitter', passport.authenticate('twitter'));
