@@ -15,6 +15,7 @@ let urlInfo;
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const keywordsRouter = require('./routes/api/keywords');
 
 let app = express();
 
@@ -70,6 +71,10 @@ passport.deserializeUser(function(user, done) {
 
 app.use('/', indexRouter);
 app.use('/success', usersRouter);
+
+app.use('/api/keywords', keywordsRouter);
+
+// 認証周り
 app.get('/auth/twitter', passport.authenticate('twitter'));
 app.get('/auth/twitter/callback',
   passport.authenticate('twitter', { failureRedirect: '/?auth_failed' }),
@@ -77,6 +82,10 @@ app.get('/auth/twitter/callback',
     res.redirect('/success');
   }
 );
+
+
+
+// Twitter API叩く系
 app.get('/api/twitter/search', function(request, response) {
   twitter.search(urlInfo,
       function(result){
@@ -84,6 +93,8 @@ app.get('/api/twitter/search', function(request, response) {
       }
   );
 });
+
+
 
 
 
