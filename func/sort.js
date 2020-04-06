@@ -1,8 +1,8 @@
 
 var fs = require('fs');
 const path = require('path');
-const filepath = '/data/tweet-list-sample.json';
 
+// const filepath = '/data/tweet-list-sample.json';
 // json = JSON.parse(fs.readFileSync(path.join( __dirname, '../', filepath), 'utf8'));
 // //result = sort_by_favorite(json);
 // //result = sort_by_retweet(json);

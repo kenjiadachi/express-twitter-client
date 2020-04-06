@@ -71,7 +71,7 @@ function diff_Object() {
   function readfile(filePath){
     filePath = path.join( __dirname, '../', filePath);
     if(fs.existsSync(filePath)) {
-      json = JSON.parse(fs.readFileSync(path.join( filePath , 'utf8')));
+      json = JSON.parse(fs.readFileSync( filePath , 'utf8'));
       return json;
     }else{
       console.log('jsonfile file does not exit');
