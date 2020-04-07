@@ -17,6 +17,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const keywordsRouter = require('./routes/api/keywords');
 const messagesRouter = require('./routes/api/messages');
+const twitterRouter = require('./routes/api/twitter');
 
 let app = express();
 
@@ -85,16 +86,7 @@ app.get('/auth/twitter/callback',
   }
 );
 
-
-
-// Twitter API叩く系
-app.get('/api/twitter/search', function(request, response) {
-  twitter.search(urlInfo,
-      function(result){
-          response.send(result);
-      }
-  );
-});
+app.use('/api/twitter', twitterRouter);
 
 
 
