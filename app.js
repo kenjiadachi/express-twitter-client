@@ -18,6 +18,7 @@ const usersRouter = require('./routes/users');
 const keywordsRouter = require('./routes/api/keywords');
 const messagesRouter = require('./routes/api/messages');
 const twitterRouter = require('./routes/api/twitter');
+const hotTweetsRouter = require('./routes/api/hotTweets');
 
 let app = express();
 
@@ -70,14 +71,19 @@ passport.deserializeUser(function(user, done) {
   done(null, user);
 });
 
-
+// 認証時に使う画面
 app.use('/', indexRouter);
 app.use('/success', usersRouter);
 
+// twitter絡まないAPI
 app.use('/api/keywords', keywordsRouter);
 app.use('/api/messages', messagesRouter);
 
-// 認証周り
+// twitter絡む系API
+app.use('/api/twitter', twitterRouter);
+app.use('/api/hot-tweet', hotTweetsRouter);
+
+// 認証
 app.get('/auth/twitter', passport.authenticate('twitter'));
 app.get('/auth/twitter/callback',
   passport.authenticate('twitter', { failureRedirect: '/?auth_failed' }),
@@ -85,8 +91,6 @@ app.get('/auth/twitter/callback',
     res.redirect('/success');
   }
 );
-
-app.use('/api/twitter', twitterRouter);
 
 
 
