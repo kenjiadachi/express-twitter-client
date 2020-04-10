@@ -15,7 +15,6 @@ router.get('/:id', function(req, res, next) {
 
 /* PUT keywords */
 router.put('/:id', function(req, res, next) {
-  console.log(req)
   saveToJson.keywords(req.params.id, req.body.keywords)
   res.json(req.body.keywords);
 });
