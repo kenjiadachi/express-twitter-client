@@ -6,8 +6,8 @@ const saveToJson = require('../../func/saveToJson');
 const settings = path.join( __dirname, '../../data/settings.json');
 
 /* GET message listing. */
-router.get('/:id', function(req, res, next) {
-  const userID = req.params.id
+router.get('/', function(req, res) {
+  const userID = req.user.id
   jsonObject = JSON.parse(fs.readFileSync(settings, 'utf8'));
   let index = jsonObject.findIndex((v) => v.id === userID);
   returnObj = {
@@ -18,9 +18,8 @@ router.get('/:id', function(req, res, next) {
 });
 
 /* PUT message */
-router.put('/:id', function(req, res, next) {
-  console.log(req)
-  saveToJson.message(req.params.id, req.body.message, req.body.minFollower)
+router.put('/', function(req, res) {
+  saveToJson.message(req.user.id, req.body.message, req.body.minFollower)
   res.json(req.body);
 });
 

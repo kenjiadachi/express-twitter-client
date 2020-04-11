@@ -5,18 +5,18 @@ const fs = require("fs");
 const saveToJson = require('../../func/saveToJson');
 const settings = path.join( __dirname, '../../data/settings.json');
 
-/* GET keywords listing. */
+/* GET accounts listing. */
 router.get('/', function(req, res) {
   const userID = req.user.id
   jsonObject = JSON.parse(fs.readFileSync(settings, 'utf8'));
   let index = jsonObject.findIndex((v) => v.id === userID);
-  res.json(jsonObject[index].keywords);
+  res.json(jsonObject[index].accounts);
 });
 
-/* PUT keywords */
+/* PUT accounts */
 router.put('/', function(req, res, next) {
-  saveToJson.keywords(req.user.id, req.body.keywords)
-  res.json(req.body.keywords);
+  saveToJson.accounts(req.user.id, req.body.accounts)
+  res.json(req.body.accounts);
 });
 
 module.exports = router;

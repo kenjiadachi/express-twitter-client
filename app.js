@@ -17,6 +17,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const keywordsRouter = require('./routes/api/keywords');
 const messagesRouter = require('./routes/api/messages');
+const accountsRouter = require('./routes/api/accounts');
 const twitterRouter = require('./routes/api/twitter');
 const hotTweetsRouter = require('./routes/api/hotTweets');
 
@@ -78,6 +79,7 @@ app.use('/success', usersRouter);
 // twitter絡まないAPI
 app.use('/api/keywords', keywordsRouter);
 app.use('/api/messages', messagesRouter);
+app.use('/api/accounts', accountsRouter);
 
 // twitter絡む系API
 app.use('/api/twitter', twitterRouter);

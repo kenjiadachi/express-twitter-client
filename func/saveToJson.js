@@ -104,6 +104,38 @@ exports.message = function (user_id, message, minFollower) {
 };
 
 
+// accountsを保存する
+exports.accounts = function (user_id, accounts) {
+  let jsonObject = [];
+  if(fs.existsSync(settings)) {
+    console.log("settings.json file exists.");
+    jsonObject = JSON.parse(fs.readFileSync(settings, 'utf8'));
+
+    let search = jsonObject.findIndex((v) => v.id === user_id);
+
+    if(search != -1) {
+      console.log(jsonObject[search].accounts);
+      jsonObject[search].accounts = accounts;
+    } else {
+      jsonObject.push({
+        id: user_id,
+        accounts: accounts
+      });
+    }
+
+  } else {
+    // settings.jsonがないときの処理
+    console.log('settings.json file does not exist');
+    jsonObject.push({
+      id: user_id,
+      accounts: accounts
+    });
+    console.log(jsonObject);
+  }
+
+  saveToJson(settings, jsonObject)
+};
+
 // 書き出し用の関数
 function saveToJson(filename, object) {
   fs.writeFile(filename, JSON.stringify(object) , (err) => {
