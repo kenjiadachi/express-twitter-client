@@ -6,7 +6,8 @@ const sample_userid = "necwecwe";
 //console.log(analytics(sample_userid));
 //console.log(div_by_followers_count(sample_userid));
 //console.log(div_by_statuses_count(sample_userid));
-console.log(isProtected(sample_userid));
+//console.log(isProtected(sample_userid));
+console.log(arrange_by_date(sample_userid,"2020-04-01", "2020-04-04"));
 
 
 exports.analytics = function(userID) {
@@ -239,3 +240,66 @@ function isProtected(user_id) {
   }
   return result;
 }
+
+function arrange_by_date(user_id, start_date, end_date) {
+  let filename = user_id + ".json";
+  filename = path.join( __dirname, '../data/ffs/', filename);
+  start_date = new Date(start_date);
+  end_date = new Date(end_date);
+
+  let result = {
+    "follows_count": {},
+    "new_follows_count": {},
+    "deleted_follows_count": {},
+    "followers_count": {},
+    "new_followers_count": {},
+    "deleted_followers_count": {},
+    "ff_ratio": {}
+  }
+    if(fs.existsSync(filename)) {
+      console.log("json file exist");
+      jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
+      key = Object.keys(jsonObject);
+      //１日ずつ処理
+      for(item of key){
+        if(typeof jsonObject[item] == "object") {
+          date = new Date(item);
+          if(start_date <= date && date <= end_date){
+            if(jsonObject[item].hasOwnProperty("follows_count")){
+              result.follows_count[item] = jsonObject[item].follows_count;
+            }
+            if(jsonObject[item].hasOwnProperty("new_follows_count")){
+              result.new_follows_count[item] = jsonObject[item].new_follows_count;
+            }
+            if(jsonObject[item].hasOwnProperty("deleted_follows_count")){
+              result.deleted_follows_count[item] = jsonObject[item].deleted_follows_count;
+            }
+            if(jsonObject[item].hasOwnProperty("followers_count")){
+              result.followers_count[item] = jsonObject[item].followers_count;
+            }
+            if(jsonObject[item].hasOwnProperty("new_followers_count")){
+              result.new_followers_count[item] = jsonObject[item].new_followers_count;
+            }
+            if(jsonObject[item].hasOwnProperty("deleted_followers_count")){
+              result.deleted_followers_count[item] = jsonObject[item].deleted_followers_count;
+            }
+            if(jsonObject[item].hasOwnProperty("ff_ratio")){
+              result.ff_ratio[item] = jsonObject[item].ff_ratio;
+            }
+          }
+        }
+
+      }
+
+    }
+    else {
+      console.log("json file does not exist");
+    }
+
+    return result;
+}
+
+function toDate (str, delim) {
+  var arr = str.split(delim)
+  return new Date(arr[0], arr[1] - 1, arr[2]);
+};
