@@ -3,9 +3,13 @@ const path = require('path');
 const diff = require('./diff')
 
 const sample_userid = "necwecwe";
-console.log(analytics(sample_userid));
+//console.log(analytics(sample_userid));
+//console.log(div_by_followers_count(sample_userid));
+//console.log(div_by_statuses_count(sample_userid));
+console.log(isProtected(sample_userid));
 
-export.analytics = function(userID) {
+
+exports.analytics = function(userID) {
   let filename = userID + ".json";
   filename = path.join( __dirname, '../data/ffs/', filename);
 
@@ -91,4 +95,147 @@ function both_object(obj1,obj2){
     }
   });
   return tmp;
+}
+
+
+function div_by_followers_count(user_id) {
+  let filename = user_id + ".json";
+  filename = path.join( __dirname, '../data/ffs/', filename);
+
+  let result = {
+    "0-99":[],
+    "100-499":[],
+    "500-999":[],
+    "1000-4999":[],
+    "5000-9999":[],
+    "10000-49999":[],
+    "50000-":[],
+  };
+
+  if(fs.existsSync(filename)){
+    console.log("json file exist");
+    jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
+    obj = Object.values(jsonObject);
+    latest_followers = obj.slice(-1)[0].followers;
+
+    //followers_countにより分類してPush
+    for (item in latest_followers) {
+      let sc = Number(latest_followers[item].followers_count);
+
+      if (0 <= sc && sc <100){
+        result["0-99"].push(latest_followers[item]);
+      }
+      else if (100 <= sc && sc <500) {
+        result["100-499"].push(latest_followers[item]);
+      }
+      else if (500 <= sc && sc <1000){
+        result["500-999"].push(latest_followers[item]);
+      }
+      else if (1000 <= sc && sc <5000) {
+        result["1000-4999"].push(latest_followers[item]);
+      }
+      else if (5000 <= sc && sc <10000) {
+        result["5000-9999"].push(latest_followers[item]);
+      }
+      else if (10000 <= sc && sc <50000){
+        result["10000-50000"].push(latest_followers[item]);
+      }
+      else {
+        result["50000-"].push(latest_followers[item]);
+      }
+
+    }
+
+  }
+  else {
+    console.log("json file does not exist");
+  }
+  return result;
+}
+
+function div_by_statuses_count(user_id) {
+  let filename = user_id + ".json";
+  filename = path.join( __dirname, '../data/ffs/', filename);
+
+  let result = {
+    "0-99":[],
+    "100-499":[],
+    "500-999":[],
+    "1000-4999":[],
+    "5000-9999":[],
+    "10000-49999":[],
+    "50000-":[],
+  };
+
+  if(fs.existsSync(filename)){
+    console.log("json file exist");
+    jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
+    obj = Object.values(jsonObject);
+    latest_followers = obj.slice(-1)[0].followers;
+
+    //followers_countにより分類してPush
+    for (item in latest_followers) {
+      let sc = Number(latest_followers[item].statuses_count);
+
+      if (0 <= sc && sc <100){
+        result["0-99"].push(latest_followers[item]);
+      }
+      else if (100 <= sc && sc <500) {
+        result["100-499"].push(latest_followers[item]);
+      }
+      else if (500 <= sc && sc <1000){
+        result["500-999"].push(latest_followers[item]);
+      }
+      else if (1000 <= sc && sc <5000) {
+        result["1000-4999"].push(latest_followers[item]);
+      }
+      else if (5000 <= sc && sc <10000) {
+        result["5000-9999"].push(latest_followers[item]);
+      }
+      else if (10000 <= sc && sc <50000){
+        result["10000-50000"].push(latest_followers[item]);
+      }
+      else {
+        result["50000-"].push(latest_followers[item]);
+      }
+
+    }
+  }
+  else {
+    console.log("json file does not exist");
+  }
+  return result;
+}
+
+
+function isProtected(user_id) {
+  let filename = user_id + ".json";
+  filename = path.join( __dirname, '../data/ffs/', filename);
+
+  let result = {
+    "protected":[],
+    "not_protected":[],
+  };
+
+  if(fs.existsSync(filename)){
+    console.log("json file exist");
+    jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
+    obj = Object.values(jsonObject);
+    latest_followers = obj.slice(-1)[0].followers;
+
+    //followers_countにより分類してPush
+    for (item in latest_followers) {
+
+      if (latest_followers[item].protected){
+        result["protected"].push(latest_followers[item]);
+      }
+      else {
+        result["not_protected"].push(latest_followers[item]);
+      }
+    }
+  }
+  else {
+    console.log("json file does not exist");
+  }
+  return result;
 }

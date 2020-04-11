@@ -54,15 +54,18 @@ const samplefollowers2 = [
   },
 ];
 
-const sampleUser_id = "necwecwe";
+const sampleUser_id = "news";
 const follows_count = "200";
 const followers_count = "300";
 
 //引数；オブジェクトの配列、オブジェクトの配列、String
-ffs(samplefollows, samplefollowers, sampleUser_id, follows_count, followers_count);
-//ffs(samplefollows2, samplefollowers2, sampleUser_id, follows_count, followers_count);
+//ffs(samplefollows, samplefollowers, sampleUser_id);
+ffs(samplefollows2, samplefollowers2, sampleUser_id);
 
-function ffs(followsObject, followersObject, user_id, followsCount, followersCount) {
+function ffs(followsObject, followersObject, user_id) {
+  const followsCount = followsObject.length;
+  const followersCount = followersObject.length;
+  console.log(followersCount,followersCount);
   //実行日付を取得
   let today = new Date();
   today = today.getFullYear() + "-" + ("0" + (today.getMonth()+1)).slice(-2) + "-" + ("0" + today.getDate()).slice(-2);
