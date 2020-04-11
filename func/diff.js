@@ -3,20 +3,22 @@ const path = require('path');
 const filepath1 = '/data/tweet-list-sample.json'
 const filepath2 = '/data/tweet-list-sample-neo.json'
 
-result = diff_Object();
-console.log(result);
+
+let sampleObject1 = [];
+let sampleObject2 = [];
+
+//一旦ファイル読みます
+
+//sampleObject1 = readfile(filepath1);
+//  console.log(jsonObject1);
+//sampleObject2 = readfile(filepath2);
+//console.log(jsonObject2);
+
+//result = diff_Object(sampleObject1,sampleObject2);
+//console.log(result);
 
 //差分をとる
-function diff_Object() {
-  let jsonObject1 = [];
-  let jsonObject2 = [];
-
-  //一旦ファイル読みます
-
-  jsonObject1 = readfile(filepath1);
-//  console.log(jsonObject1);
-  jsonObject2 = readfile(filepath2);
-  //console.log(jsonObject2);
+exports.diff_Object = function (jsonObject1, jsonObject2) {
 
   let same_id = [];
   let marged = [];
@@ -52,19 +54,20 @@ function diff_Object() {
   const uniqueItems = filterUniqueItemsById(marged);
   //console.log(uniqueItems);
 
-  function differencen (array) {
+  function difference(array) {
     let itemIds = same_id.map(function(item) {
       return item.id_str;
     });
-
+    console.log(itemIds);
     return array.filter(function(item, index){
-      return itemIds.indexOf(item.id_str) !== index;
+      return itemIds.indexOf(item.id_str) === -1;
+
     });
   }
 
-  only_json1 = differencen(jsonObject1);
+  only_json1 = difference(jsonObject1);
   //console.log(only_json1);
-  only_json2 = differencen(jsonObject2);
+  only_json2 = difference(jsonObject2);
   //console.log(only_json2);
 
 
