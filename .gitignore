@@ -7,3 +7,5 @@ data/*
 .vscode
 
 .DS_Store
+
+/func/output*

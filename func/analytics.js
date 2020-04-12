@@ -2,12 +2,13 @@ var fs = require('fs');
 const path = require('path');
 const diff = require('./diff')
 
-const sample_userid = "necwecwe";
+const sample_userid = "for_test";
 //console.log(analytics(sample_userid));
 //console.log(div_by_followers_count(sample_userid));
 //console.log(div_by_statuses_count(sample_userid));
 //console.log(isProtected(sample_userid));
-console.log(arrange_by_date(sample_userid,"2020-04-01", "2020-04-04"));
+//console.log(arrange_by_date(sample_userid,"2020-04-01", "2020-04-04"));
+console.log(ration_ff(sample_userid,"2020-04-12", "2020-04-14"));
 
 
 exports.analytics = function(userID) {
@@ -299,7 +300,64 @@ function arrange_by_date(user_id, start_date, end_date) {
     return result;
 }
 
-function toDate (str, delim) {
-  var arr = str.split(delim)
-  return new Date(arr[0], arr[1] - 1, arr[2]);
-};
+function ration_ff(user_id, start_date, end_date) {
+  let filename = user_id + ".json";
+  filename = path.join( __dirname, '../data/ffs/', filename);
+  let result = {
+  };
+  if(fs.existsSync(filename)){
+    console.log("json file exist");
+    start_date = new Date(start_date);
+    end_date = new Date(end_date);
+    jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
+    key = Object.keys(jsonObject);
+
+    for(item of key){
+      if(typeof jsonObject[item] == "object") {
+        date = new Date(item);
+        if(start_date <= date && date <= end_date){
+          if(jsonObject[item].hasOwnProperty("new_followers")){
+            result[item] = {};
+            result[item]["new_followers"] = jsonObject[item].new_followers_count;
+            //new_followersのゆーざーがいつdeleted_followersに入っているか
+
+            for (item2 of key) {
+              if(typeof jsonObject[item2] == "object") {
+                searched_date = new Date(item2);
+                if(date < searched_date){
+                  console.log(item2);
+                  if(jsonObject[item].hasOwnProperty("deleted_followers")){
+                    // console.log(Object.(jsonObject[item2]).deleted_followers);
+                    // new_followerとdeleted_followerに重複があるかの確認
+                    let same_id =[];
+                    jsonObject[item2].deleted_followers.filter(x => {
+                      const same = jsonObject[item].new_followers.filter(
+                        y =>
+                          x.id_str === y.id_str
+                      );
+                      for(l in same){
+                        let varkey = same[key];
+                        same_id.push(varkey);
+                      }
+                      deleted_count = same_id.length;
+                      if(deleted_count != 0){
+                        result[item][item2] = deleted_count;
+                      }
+                    });
+                  }
+                }
+              }
+            }
+          }
+
+        }
+      }
+
+      }
+
+  }
+  else{
+    console.log("json file does not exist");
+  }
+  return result;
+}
