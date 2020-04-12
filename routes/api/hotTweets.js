@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const twitter = require('../../func/twitter');
-const convert = require('../../func/convert');
 const sort = require('../../func/sort');
 const url = require('url');
 let urlInfo;

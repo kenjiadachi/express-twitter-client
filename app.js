@@ -20,6 +20,7 @@ const messagesRouter = require('./routes/api/messages');
 const accountsRouter = require('./routes/api/accounts');
 const twitterRouter = require('./routes/api/twitter');
 const hotTweetsRouter = require('./routes/api/hotTweets');
+const ffsRouter = require('./routes/api/ffs');
 
 let app = express();
 
@@ -84,6 +85,7 @@ app.use('/api/accounts', accountsRouter);
 // twitter絡む系API
 app.use('/api/twitter', twitterRouter);
 app.use('/api/hot-tweet', hotTweetsRouter);
+app.use('/api/ffs', ffsRouter);
 
 // 認証
 app.get('/auth/twitter', passport.authenticate('twitter'));
