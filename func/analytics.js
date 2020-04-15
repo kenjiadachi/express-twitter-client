@@ -2,6 +2,7 @@ var fs = require('fs');
 const path = require('path');
 const diff = require('./diff')
 
+console.log(deactives("sample"));
 
 exports.fromWhich = function(userID) {
   let filename = userID + ".json";
@@ -13,7 +14,7 @@ exports.fromWhich = function(userID) {
     console.log("json file exist");
 
     const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
-    
+
     const obj = Object.values(jsonObject);
 
     // 最新の相互フォロー配列
@@ -34,7 +35,7 @@ exports.fromWhich = function(userID) {
     result.equal = [];
     result.after_follow = [];
     result.before_follow = [];
-    
+
     //いつフォローしたか、いつフォローされたかを探す
     for(olUser of only_latest_user) {
       for (i in obj) {
@@ -260,5 +261,39 @@ function ration_ff(user_id, start_date, end_date) {
   else{
     console.log("json file does not exist");
   }
+  return result;
+}
+
+function deactives(userID) {
+  let filename = userID + ".json";
+  filename = path.join( __dirname, '../data/ffs/', filename);
+
+  let result = {}
+  result.active = [];
+  result.deactive = [];
+  if(fs.existsSync(filename)){
+    console.log("json file exist");
+
+    const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
+    const latest_follows = (Object.values(jsonObject)).slice(-1)[0].follows;
+    activate_day = new Date();
+    activate_day.setDate(activate_day.getDate() - 30);
+
+    for(obj of latest_follows) {
+      if(obj.hasOwnProperty("status")){
+        date = new Date(obj.status.created_at)
+        console.log(date);
+         if(activate_day < date){
+           result.active.push(obj);
+         } else {
+           result.deactive.push(obj);
+         }
+      }
+    }
+  }
+  else {
+    console.log("json file does not exist");
+  }
+
   return result;
 }
