@@ -2,8 +2,6 @@ var fs = require('fs');
 const path = require('path');
 const diff = require('./diff')
 
-console.log(deactives("sample"));
-
 exports.fromWhich = function(userID) {
   let filename = userID + ".json";
   filename = path.join( __dirname, '../data/ffs/', filename);
@@ -264,7 +262,7 @@ exports.follower_continue = function (user_id, start_date, end_date) {
   return result;
 }
 
-function deactives(userID) {
+exports.deactives = function (userID) {
   let filename = userID + ".json";
   filename = path.join( __dirname, '../data/ffs/', filename);
 
@@ -282,7 +280,6 @@ function deactives(userID) {
     for(obj of latest_follows) {
       if(obj.hasOwnProperty("status")){
         date = new Date(obj.status.created_at)
-        console.log(date);
          if(activate_day < date){
            result.active.push(obj);
          } else {

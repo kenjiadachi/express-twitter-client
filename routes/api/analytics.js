@@ -47,4 +47,10 @@ router.get('/follower_continue', function(req, res) {
   res.json(returnObj);
 });
 
+router.get('/deactives', function(req, res) {
+  const userID = req.user.id
+  let returnObj = analytics.deactives(userID)
+  res.json(returnObj);
+});
+
 module.exports = router;
