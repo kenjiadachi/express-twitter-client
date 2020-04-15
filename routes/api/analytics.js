@@ -1,10 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const path = require('path');
-const fs = require("fs");
-const saveToJson = require('../../func/saveToJson');
 const analytics = require('../../func/analytics');
-const settings = path.join( __dirname, '../../data/settings.json');
+const url = require('url');
+let urlInfo;
 
 router.get('/from_which', function(req, res) {
   const userID = req.user.id
@@ -27,6 +25,25 @@ router.get('/follower_tweet', function(req, res) {
 router.get('/follower_protected', function(req, res) {
   const userID = req.user.id
   let returnObj = analytics.isProtected(userID)
+  res.json(returnObj);
+});
+
+router.get('/follower_continue', function(req, res) {
+  const userID = req.user.id
+
+  // クエリー文字列を含めてurl情報を取得（trueオプションでクエリ文字列も取得）
+  urlInfo = url.parse(req.url, true);
+  if(!urlInfo.query){ res.error }
+  let startDate;
+  let endDate;
+  if( urlInfo.query.startDate ) {
+    startDate = new Date(urlInfo.query.startDate);
+  }
+  if( urlInfo.query.endDate ) {
+    endDate = new Date(urlInfo.query.endDate);
+  }
+
+  let returnObj = analytics.follower_continue(userID, startDate, endDate)
   res.json(returnObj);
 });
 

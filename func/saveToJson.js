@@ -17,47 +17,12 @@ exports.tokens = async function (user_id, token, tokenSecret) {
     if(search != -1) {
       jsonObject[search].token = token;
       jsonObject[search].tokenSecret = tokenSecret;
-
     } else {
       jsonObject.push({
         id: user_id,
         token: token,
         tokenSecret: tokenSecret
       });
-      // ここにffsの関数入れる
-      const client = twitter.initWithToken(token, tokenSecret)
-      let followerList = []
-      let followList = []
-      let options = {};
-      options.user_id = user_id
-      options.count = 200
-      options.cursor = -1
-      try {
-        do {
-          await client.get('followers/list', options)
-          .then(function (response) {
-            followerList = followerList.concat(response.users)
-            options.cursor = response.next_cursor_str
-          })
-        } while (options.cursor != 0)
-        
-        // カーソルをリセット
-        options.cursor = -1
-
-        do {
-          await client.get('friends/list', options)
-          .then(function (response) {
-            followList = followList.concat(response.users)
-            options.cursor = response.next_cursor_str
-          })
-        } while (options.cursor != 0)
-
-        ffs.update(user_id, followList, followerList)
-
-      } catch (err) {
-        console.log(err)
-      }
-      
     }
 
   } else {
@@ -67,10 +32,9 @@ exports.tokens = async function (user_id, token, tokenSecret) {
       id: user_id,
       token: token,
       tokenSecret: tokenSecret
-    });
-    // ここにffsの関数入れる
-
+    });    
   }
+  ffs.update(user_id, token, tokenSecret)
   saveToJson(settings, jsonObject)
 }
 

@@ -201,11 +201,12 @@ exports.isProtected = function (user_id) {
 }
 
 
-function ration_ff(user_id, start_date, end_date) {
+exports.follower_continue = function (user_id, start_date, end_date) {
   let filename = user_id + ".json";
   filename = path.join( __dirname, '../data/ffs/', filename);
-  let result = {
-  };
+
+  let result = {};
+
   if(fs.existsSync(filename)){
     console.log("json file exist");
     start_date = new Date(start_date);
@@ -225,8 +226,7 @@ function ration_ff(user_id, start_date, end_date) {
             for (item2 of key) {
               if(typeof jsonObject[item2] == "object") {
                 searched_date = new Date(item2);
-                if(date < searched_date){
-                  console.log(item2);
+                if(date < searched_date) {
                   if(jsonObject[item].hasOwnProperty("deleted_followers")){
                     // console.log(Object.(jsonObject[item2]).deleted_followers);
                     // new_followerとdeleted_followerに重複があるかの確認
