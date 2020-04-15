@@ -1,7 +1,8 @@
 const path = require('path');
 const fs = require('fs');
-
 const settings = path.join( __dirname, '../data/settings.json')
+const twitter = require('./twitter');
+
 
 // token, tokenSecretを保存する
 exports.tokens = function (user_id, token, tokenSecret) {
@@ -22,6 +23,8 @@ exports.tokens = function (user_id, token, tokenSecret) {
         token: token,
         tokenSecret: tokenSecret
       });
+      // ここにffsの関数入れる
+      
     }
 
   } else {
@@ -32,6 +35,8 @@ exports.tokens = function (user_id, token, tokenSecret) {
       token: token,
       tokenSecret: tokenSecret
     });
+    // ここにffsの関数入れる
+
   }
   saveToJson(settings, jsonObject)
 }

@@ -7,8 +7,6 @@ const logger = require('morgan');
 const passport = require('passport');
 const TwitterStrategy = require('passport-twitter').Strategy;
 const config = require('./config');
-const fs = require("fs");
-const twitter = require('./twitter');
 const url = require('url');
 const saveToJson = require('./func/saveToJson')
 let urlInfo;
@@ -95,8 +93,6 @@ app.get('/auth/twitter/callback',
     res.redirect('/success');
   }
 );
-
-
 
 
 

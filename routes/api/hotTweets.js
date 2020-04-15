@@ -11,7 +11,7 @@ router.get('/sum', function(req, res) {
   client = twitter.init(userID)
   // クエリー文字列を含めてurl情報を取得（trueオプションでクエリ文字列も取得）
   urlInfo = url.parse(req.url, true);
-  // if(!urlInfo.query){ res.error}
+  if(!urlInfo.query){ res.error }
   let options = {};
   let startDate;
   let endDate;

@@ -14,7 +14,7 @@ router.get('/', function(req, res) {
 });
 
 /* PUT accounts */
-router.put('/', function(req, res, next) {
+router.put('/', function(req, res) {
   saveToJson.accounts(req.user.id, req.body.accounts)
   res.json(req.body.accounts);
 });
