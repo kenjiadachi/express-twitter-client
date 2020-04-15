@@ -1,10 +1,12 @@
 const path = require('path');
 const fs = require('fs');
-
 const settings = path.join( __dirname, '../data/settings.json')
+const twitter = require('./twitter');
+const ffs = require('./ffs');
+
 
 // token, tokenSecretを保存する
-exports.tokens = function (user_id, token, tokenSecret) {
+exports.tokens = async function (user_id, token, tokenSecret) {
   let jsonObject = [];
   if(fs.existsSync(settings)) {
     console.log("settings.json file exists.");
@@ -22,6 +24,40 @@ exports.tokens = function (user_id, token, tokenSecret) {
         token: token,
         tokenSecret: tokenSecret
       });
+      // ここにffsの関数入れる
+      const client = twitter.initWithToken(token, tokenSecret)
+      let followerList = []
+      let followList = []
+      let options = {};
+      options.user_id = user_id
+      options.count = 200
+      options.cursor = -1
+      try {
+        do {
+          await client.get('followers/list', options)
+          .then(function (response) {
+            followerList = followerList.concat(response.users)
+            options.cursor = response.next_cursor_str
+          })
+        } while (options.cursor != 0)
+        
+        // カーソルをリセット
+        options.cursor = -1
+
+        do {
+          await client.get('friends/list', options)
+          .then(function (response) {
+            followList = followList.concat(response.users)
+            options.cursor = response.next_cursor_str
+          })
+        } while (options.cursor != 0)
+
+        ffs.update(user_id, followList, followerList)
+
+      } catch (err) {
+        console.log(err)
+      }
+      
     }
 
   } else {
@@ -32,6 +68,8 @@ exports.tokens = function (user_id, token, tokenSecret) {
       token: token,
       tokenSecret: tokenSecret
     });
+    // ここにffsの関数入れる
+
   }
   saveToJson(settings, jsonObject)
 }

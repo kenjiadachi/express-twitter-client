@@ -24,3 +24,15 @@ exports.init = function (user_id) {
 
   return client
 }
+
+exports.initWithToken = function (token, tokenSecret) {
+
+  var client = new Twitter({
+    consumer_key: config.consumerKey,
+    consumer_secret: config.consumerSecret,
+    access_token_key: token,
+    access_token_secret: tokenSecret,
+  });
+
+  return client
+}
