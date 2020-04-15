@@ -18,4 +18,16 @@ router.get('/follower_follower', function(req, res) {
   res.json(returnObj);
 });
 
+router.get('/follower_tweet', function(req, res) {
+  const userID = req.user.id
+  let returnObj = analytics.follower_tweet(userID)
+  res.json(returnObj);
+});
+
+router.get('/follower_protected', function(req, res) {
+  const userID = req.user.id
+  let returnObj = analytics.isProtected(userID)
+  res.json(returnObj);
+});
+
 module.exports = router;

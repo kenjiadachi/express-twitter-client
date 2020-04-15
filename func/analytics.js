@@ -117,19 +117,18 @@ exports.follower_follower = function(user_id) {
   return result;
 }
 
-function div_by_statuses_count(user_id) {
+exports.follower_tweet = function (user_id) {
   let filename = user_id + ".json";
   filename = path.join( __dirname, '../data/ffs/', filename);
 
-  let result = {
-    "0-99":[],
-    "100-499":[],
-    "500-999":[],
-    "1000-4999":[],
-    "5000-9999":[],
-    "10000-49999":[],
-    "50000-":[],
-  };
+  let result = {};
+  result._0to99 = [];
+  result._100to499 = [];
+  result._500to999 = [];
+  result._1000to4999 = [];
+  result._5000to9999 = [];
+  result._10000to49999 = [];
+  result._50000 = [];
 
   if(fs.existsSync(filename)){
     console.log("json file exist");
@@ -142,27 +141,26 @@ function div_by_statuses_count(user_id) {
       let sc = Number(latest_followers[item].statuses_count);
 
       if (0 <= sc && sc <100){
-        result["0-99"].push(latest_followers[item]);
+        result._0to99.push(latest_followers[item]);
       }
       else if (100 <= sc && sc <500) {
-        result["100-499"].push(latest_followers[item]);
+        result._100to499.push(latest_followers[item]);
       }
       else if (500 <= sc && sc <1000){
-        result["500-999"].push(latest_followers[item]);
+        result._500to999.push(latest_followers[item]);
       }
       else if (1000 <= sc && sc <5000) {
-        result["1000-4999"].push(latest_followers[item]);
+        result._1000to4999.push(latest_followers[item]);
       }
       else if (5000 <= sc && sc <10000) {
-        result["5000-9999"].push(latest_followers[item]);
+        result._5000to9999.push(latest_followers[item]);
       }
       else if (10000 <= sc && sc <50000){
-        result["10000-50000"].push(latest_followers[item]);
+        result._10000to49999.push(latest_followers[item]);
       }
       else {
-        result["50000-"].push(latest_followers[item]);
+        result._50000.push(latest_followers[item]);
       }
-
     }
   }
   else {
@@ -171,15 +169,13 @@ function div_by_statuses_count(user_id) {
   return result;
 }
 
-
-function isProtected(user_id) {
+exports.isProtected = function (user_id) {
   let filename = user_id + ".json";
   filename = path.join( __dirname, '../data/ffs/', filename);
 
-  let result = {
-    "protected":[],
-    "not_protected":[],
-  };
+  let result = {};
+  result.protected = [];
+  result.not_protected = [];
 
   if(fs.existsSync(filename)){
     console.log("json file exist");
@@ -191,10 +187,10 @@ function isProtected(user_id) {
     for (item in latest_followers) {
 
       if (latest_followers[item].protected){
-        result["protected"].push(latest_followers[item]);
+        result.protected.push(latest_followers[item]);
       }
       else {
-        result["not_protected"].push(latest_followers[item]);
+        result.not_protected.push(latest_followers[item]);
       }
     }
   }
@@ -203,6 +199,7 @@ function isProtected(user_id) {
   }
   return result;
 }
+
 
 function ration_ff(user_id, start_date, end_date) {
   let filename = user_id + ".json";
