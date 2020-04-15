@@ -79,7 +79,7 @@ exports.diff_Object = function (jsonObject1, jsonObject2) {
     }else{
       console.log('jsonfile file does not exit');
       return null;
-    }
+    };
   };
 
   return [same_id,only_json1,only_json2];
