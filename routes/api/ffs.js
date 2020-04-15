@@ -27,10 +27,4 @@ router.get('/', function(req, res) {
   res.json(result)
 });
 
-/* PUT message */
-router.put('/', function(req, res) {
-  saveToJson.message(req.user.id, req.body.message, req.body.minFollower)
-  res.json(req.body);
-});
-
 module.exports = router;

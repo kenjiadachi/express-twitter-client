@@ -11,13 +11,16 @@ const url = require('url');
 const saveToJson = require('./func/saveToJson')
 let urlInfo;
 
+// Twitterのテスト用
+// const twitterRouter = require('./routes/api/twitter');
+
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const keywordsRouter = require('./routes/api/keywords');
 const messagesRouter = require('./routes/api/messages');
 const accountsRouter = require('./routes/api/accounts');
-const twitterRouter = require('./routes/api/twitter');
 const hotTweetsRouter = require('./routes/api/hotTweets');
+const analyticsRouter = require('./routes/api/analytics');
 const ffsRouter = require('./routes/api/ffs');
 
 let app = express();
@@ -80,10 +83,12 @@ app.use('/api/keywords', keywordsRouter);
 app.use('/api/messages', messagesRouter);
 app.use('/api/accounts', accountsRouter);
 
+
 // twitter絡む系API
-app.use('/api/twitter', twitterRouter);
+// app.use('/api/twitter', twitterRouter);
 app.use('/api/hot-tweet', hotTweetsRouter);
 app.use('/api/ffs', ffsRouter);
+app.use('/api/analytics', analyticsRouter);
 
 // 認証
 app.get('/auth/twitter', passport.authenticate('twitter'));

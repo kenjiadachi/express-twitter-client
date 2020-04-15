@@ -27,26 +27,26 @@ exports.update = function (user_id, followsObject, followersObject) {
       //今日のデータがない場合には、今日のデータ＆前日との比較データを追記
       console.log("this is today's first data");
       let o = (Object.values(obj)).slice(-1)[0].follows;
-      diff_follow = diff.diff_Object(o,followsObject);
+      diff_follow = diff.ObjectArrays(o, followsObject);
       let o2 = (Object.values(obj)).slice(-1)[0].followers;
-      diff_follower = diff.diff_Object(o2,followersObject);
+      diff_follower = diff.ObjectArrays(o2, followersObject);
 
       let ratio = (Math.round((followersCount/followsCount)*100))/100;
       jsonObject = obj;
 
       jsonObject[today] = {
         "follows": followsObject,
-        "new_follows": diff_follow[2],
-        "deleted_follows": diff_follow[1],
+        "new_follows": diff_follow.onlyObjArr2,
+        "deleted_follows": diff_follow.onlyObjArr1,
         "followers": followersObject,
-        "new_followers": diff_follower[2],
-        "deleted_followers": diff_follower[1],
+        "new_followers": diff_follower.onlyObjArr2,
+        "deleted_followers": diff_follower.onlyObjArr1,
         "follows_count": followsCount,
-        "new_follows_count": diff_follow[2].length,
-        "deleted_follows_count": diff_follow[1].length,
+        "new_follows_count": diff_follow.onlyObjArr2.length,
+        "deleted_follows_count": diff_follow.onlyObjArr1.length,
         "followers_count": followersCount,
-        "new_followers_count": diff_follower[2].length,
-        "deleted_followers_count": diff_follower[1].length,
+        "new_followers_count": diff_follower.onlyObjArr2.length,
+        "deleted_followers_count": diff_follower.onlyObjArr1.length,
         "ff_ratio": ratio.toFixed(2)
       }
 

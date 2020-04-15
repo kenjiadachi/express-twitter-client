@@ -1,86 +1,38 @@
-var fs = require('fs');
-const path = require('path');
-const filepath1 = '/data/tweet-list-sample.json'
-const filepath2 = '/data/tweet-list-sample-neo.json'
-
-
-let sampleObject1 = [];
-let sampleObject2 = [];
-
-//一旦ファイル読みます
-
-//sampleObject1 = readfile(filepath1);
-//  console.log(jsonObject1);
-//sampleObject2 = readfile(filepath2);
-//console.log(jsonObject2);
-
-//result = diff_Object(sampleObject1,sampleObject2);
-//console.log(result);
-
 //差分をとる
-exports.diff_Object = function (jsonObject1, jsonObject2) {
+exports.ObjectArrays = function (objArr1, objArr2) {
+  let result = {};
+  result.common = [];
 
-  let same_id = [];
-  let marged = [];
-  let only_json1 = [];
-  let only_json2 = [];
+  result.onlyObjArr1 = [];
+  result.onlyObjArr2 = [];
 
-  jsonObject1.filter(item1 => {
-    const same = jsonObject2.filter(
+  objArr1.filter(item1 => {
+    const same = objArr2.filter(
       item2 =>
         item1.id_str === item2.id_str
     );
 
     for(key in same){
       let varkey = same[key];
-      same_id.push(varkey);
+      result.common.push(varkey);
     }
   });
 
-　marged = jsonObject1.concat(jsonObject2);
 
-  // IE11でも使える（Babel + polyfill 未使用）
-  function filterUniqueItemsById (array) {
-    // idを集約した配列を作成
-    let itemIds = array.map(function(item) {
-      return item.id_str;
-    });
-    //
-    return array.filter(function(item, index) {
-      return itemIds.indexOf(item.id_str) === index;
-    });
-  }
+  result.onlyObjArr1 = difference(objArr1, result.common);
+  result.onlyObjArr2 = difference(objArr2, result.common);
 
-  const uniqueItems = filterUniqueItemsById(marged);
-  //console.log(uniqueItems);
-
-  function difference(array) {
-    let itemIds = same_id.map(function(item) {
-      return item.id_str;
-    });
-    console.log(itemIds);
-    return array.filter(function(item, index){
-      return itemIds.indexOf(item.id_str) === -1;
-
-    });
-  }
-
-  only_json1 = difference(jsonObject1);
-  //console.log(only_json1);
-  only_json2 = difference(jsonObject2);
-  //console.log(only_json2);
+  // return [common,only_json1,only_json2];
+  return result
+}
 
 
-  function readfile(filePath){
-    filePath = path.join( __dirname, '../', filePath);
-    if(fs.existsSync(filePath)) {
-      json = JSON.parse(fs.readFileSync( filePath , 'utf8'));
-      return json;
-    }else{
-      console.log('jsonfile file does not exit');
-      return null;
-    };
-  };
 
-  return [same_id,only_json1,only_json2];
+function difference(array, common) {
+  let itemIds = common.map(function(item) {
+    return item.id_str;
+  });
+  return array.filter(function(item){
+    return itemIds.indexOf(item.id_str) === -1;
+  });
 }
