@@ -2,7 +2,7 @@ var fs = require('fs');
 const path = require('path');
 const diff = require('./diff')
 
-console.log(deactives("sample"));
+console.log(require('util').inspect(keywords_followbacks("1"), { depth: null }));
 
 exports.fromWhich = function(userID) {
   let filename = userID + ".json";
@@ -268,7 +268,7 @@ function deactives(userID) {
   let filename = userID + ".json";
   filename = path.join( __dirname, '../data/ffs/', filename);
 
-  let result = {}
+  let result = {};
   result.active = [];
   result.deactive = [];
   if(fs.existsSync(filename)){
@@ -295,5 +295,52 @@ function deactives(userID) {
     console.log("json file does not exist");
   }
 
+  return result;
+}
+
+function keywords_followbacks(userID) {
+  let filename = userID + ".json";
+  file_logs = path.join( __dirname, '../logs/follow-logs/', filename);
+  file_ffs = path.join( __dirname, '../data/ffs/', filename);
+  let result = [];
+  let key_id = {};
+  if(fs.existsSync(file_logs) && fs.existsSync(file_ffs)){
+    const logsObject = JSON.parse(fs.readFileSync(file_logs, 'utf8'));
+    const ffsObject = JSON.parse(fs.readFileSync(file_ffs, 'utf8'));
+    const latest_followers = (Object.values(ffsObject)).slice(-1)[0].followers;
+
+    for (item in logsObject) {
+      keyword = logsObject[item].keyword;
+      console.log(typeof(keyword));
+      if(keyword != null && Object.keys(key_id).indexOf(keyword) === -1){
+        key_id[keyword] = [logsObject[item].user];
+      }
+      else if(keyword != null && Object.keys(key_id).indexOf(keyword) !== -1){
+        key_id[keyword].push(logsObject[item].user);
+      }
+    }
+    console.log(key_id);
+    for(keys in key_id){
+      //console.log(key);
+      // console.log(key_id[key]);
+      // console.log(latest_followers);
+      let followedID = diff.ObjectArrays(key_id[keys], latest_followers).common;
+      // console.log(followedID);
+      let unfollowedID = diff.ObjectArrays(key_id[keys], latest_followers).onlyObjArr1;
+      // console.log(unfollowedID);
+      console.log(key);
+      resultObj = {
+        "keyword": keys,
+        "follower": followedID,
+        "notFollower": unfollowedID
+      };
+      //console.log(resultObj);
+    //  resultObj["unfollower"] = unfollowedID;
+      result.push(resultObj);
+    }
+  }
+  else {
+    console.log("json file does not exist");
+  }
   return result;
 }
