@@ -5,7 +5,7 @@ const config = require('../config');
 
 const settings = path.join(__dirname, '../data/settings.json');
 
-exports.init = function (user_id) {
+function init(userId) {
   let jsonObject = {};
   try {
     jsonObject = JSON.parse(fs.readFileSync(settings, 'utf8'));
@@ -14,7 +14,7 @@ exports.init = function (user_id) {
     throw err;
   }
 
-  const search = jsonObject.findIndex((v) => v.id === user_id);
+  const search = jsonObject.findIndex((v) => v.id === userId);
 
   const client = new Twitter({
     consumer_key: config.consumerKey,
@@ -24,9 +24,9 @@ exports.init = function (user_id) {
   });
 
   return client;
-};
+}
 
-exports.initWithToken = function (token, tokenSecret) {
+function initWithToken(token, tokenSecret) {
   const client = new Twitter({
     consumer_key: config.consumerKey,
     consumer_secret: config.consumerSecret,
@@ -35,4 +35,9 @@ exports.initWithToken = function (token, tokenSecret) {
   });
 
   return client;
+}
+
+module.exports = {
+  init,
+  initWithToken,
 };

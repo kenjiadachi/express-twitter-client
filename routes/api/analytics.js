@@ -55,4 +55,10 @@ router.get('/deactives', (req, res) => {
   res.json(returnObj);
 });
 
+router.get('/keywords_followbacks', (req, res) => {
+  const userID = req.user.id;
+  const returnObj = analytics.keywords_followbacks(userID);
+  res.json(returnObj);
+});
+
 module.exports = router;
