@@ -1,5 +1,5 @@
 // 差分をとる
-exports.ObjectArrays = function (objArr1, objArr2) {
+function ObjectArrays (objArr1, objArr2) {
   const result = {};
   result.common = [];
 
@@ -11,7 +11,7 @@ exports.ObjectArrays = function (objArr1, objArr2) {
       (item2) => item1.id_str === item2.id_str,
     );
 
-    for (key in same) {
+    for (var key in same) {
       const varkey = same[key];
       result.common.push(varkey);
     }
@@ -23,10 +23,15 @@ exports.ObjectArrays = function (objArr1, objArr2) {
 
   // return [common,only_json1,only_json2];
   return result;
-};
+}
 
 
 function difference(array, common) {
   const itemIds = common.map((item) => item.id_str);
   return array.filter((item) => itemIds.indexOf(item.id_str) === -1);
 }
+
+
+module.exports = {
+  ObjectArrays: ObjectArrays,
+};

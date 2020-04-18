@@ -2,12 +2,11 @@ const path = require('path');
 const fs = require('fs');
 
 const settings = path.join(__dirname, '../data/settings.json');
-const twitter = require('./twitter');
 const ffs = require('./ffs');
 
 
 // token, tokenSecretを保存する
-exports.tokens = async function (user_id, token, tokenSecret) {
+async function tokens (user_id, token, tokenSecret) {
   let jsonObject = [];
   if (fs.existsSync(settings)) {
     console.log('settings.json file exists.');
@@ -36,11 +35,11 @@ exports.tokens = async function (user_id, token, tokenSecret) {
   }
   ffs.update(user_id, token, tokenSecret);
   saveToJson(settings, jsonObject);
-};
+}
 
 
 // keywordsを保存する
-exports.keywords = function (user_id, keywords) {
+function keywords (user_id, keywords) {
   let jsonObject = [];
   if (fs.existsSync(settings)) {
     console.log('settings.json file exists.');
@@ -68,10 +67,10 @@ exports.keywords = function (user_id, keywords) {
   }
 
   saveToJson(settings, jsonObject);
-};
+}
 
 // messages, min_followerを保存する
-exports.message = function (user_id, message, minFollower) {
+ function message (user_id, message, minFollower) {
   let jsonObject = [];
   if (fs.existsSync(settings)) {
     console.log('settings.json file exists.');
@@ -101,11 +100,11 @@ exports.message = function (user_id, message, minFollower) {
   }
 
   saveToJson(settings, jsonObject);
-};
+}
 
 
 // accountsを保存する
-exports.accounts = function (user_id, accounts) {
+ function accounts (user_id, accounts) {
   let jsonObject = [];
   if (fs.existsSync(settings)) {
     console.log('settings.json file exists.');
@@ -133,7 +132,7 @@ exports.accounts = function (user_id, accounts) {
   }
 
   saveToJson(settings, jsonObject);
-};
+}
 
 // 書き出し用の関数
 function saveToJson(filename, object) {
@@ -149,3 +148,12 @@ function saveToJson(filename, object) {
     }
   });
 }
+
+
+
+module.exports = {
+  tokens: tokens,
+  keywords: keywords,
+  message: message,
+  accounts: accounts,
+};

@@ -10,7 +10,7 @@ let urlInfo;
 
 router.get('/sum', (req, res) => {
   const userID = req.user.id;
-  client = twitter.init(userID);
+  const client = twitter.init(userID);
   // クエリー文字列を含めてurl情報を取得（trueオプションでクエリ文字列も取得）
   urlInfo = url.parse(req.url, true);
   if (!urlInfo.query) { res.error; }
@@ -29,7 +29,7 @@ router.get('/sum', (req, res) => {
   options.count = 200;
   client.get('statuses/user_timeline', options)
     .then((tweets) => {
-      const filteredTweets = tweets.filter((item, index) => {
+      const filteredTweets = tweets.filter((item) => {
         if (new Date(item.created_at).getTime() > startDate.getTime() && new Date(item.created_at).getTime() < endDate.getTime()) return true;
       });
       const sortedFilteredTweets = sort.bySum(filteredTweets);
@@ -43,7 +43,7 @@ router.get('/sum', (req, res) => {
 
 router.get('/rt', (req, res) => {
   const userID = req.user.id;
-  client = twitter.init(userID);
+  const client = twitter.init(userID);
   // クエリー文字列を含めてurl情報を取得（trueオプションでクエリ文字列も取得）
   urlInfo = url.parse(req.url, true);
   // if(!urlInfo.query){ res.error}
@@ -62,7 +62,7 @@ router.get('/rt', (req, res) => {
   options.count = 200;
   client.get('statuses/user_timeline', options)
     .then((tweets) => {
-      const filteredTweets = tweets.filter((item, index) => {
+      const filteredTweets = tweets.filter((item) => {
         if (new Date(item.created_at).getTime() > startDate.getTime() && new Date(item.created_at).getTime() < endDate.getTime()) return true;
       });
       const sortedFilteredTweets = sort.byRet(filteredTweets);
@@ -76,7 +76,7 @@ router.get('/rt', (req, res) => {
 
 router.get('/like', (req, res) => {
   const userID = req.user.id;
-  client = twitter.init(userID);
+  const client = twitter.init(userID);
   // クエリー文字列を含めてurl情報を取得（trueオプションでクエリ文字列も取得）
   urlInfo = url.parse(req.url, true);
   // if(!urlInfo.query){ res.error}
@@ -95,7 +95,7 @@ router.get('/like', (req, res) => {
   options.count = 200;
   client.get('statuses/user_timeline', options)
     .then((tweets) => {
-      const filteredTweets = tweets.filter((item, index) => {
+      const filteredTweets = tweets.filter((item) => {
         if (new Date(item.created_at).getTime() > startDate.getTime() && new Date(item.created_at).getTime() < endDate.getTime()) return true;
       });
       const sortedFilteredTweets = sort.byFav(filteredTweets);

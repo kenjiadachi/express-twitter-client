@@ -4,7 +4,7 @@ const diff = require('./diff');
 const twitter = require('./twitter');
 
 // 引数: オブジェクトの配列、オブジェクトの配列、String
-exports.update = async function (user_id, token, tokenSecret) {
+ async function update (user_id, token, tokenSecret) {
   // ここにffsの関数入れる
   const client = twitter.initWithToken(token, tokenSecret);
   let followerList = [];
@@ -37,9 +37,9 @@ exports.update = async function (user_id, token, tokenSecret) {
   } catch (err) {
     console.log(err);
   }
-};
+}
 
-exports.get = function (user_id, start_date, end_date) {
+function get (user_id, start_date, end_date) {
   let filename = `${user_id}.json`;
   filename = path.join(__dirname, '../data/ffs/', filename);
   start_date = new Date(start_date);
@@ -56,32 +56,32 @@ exports.get = function (user_id, start_date, end_date) {
   };
   if (fs.existsSync(filename)) {
     console.log('json file exist');
-    jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
-    key = Object.keys(jsonObject);
+    const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
+    const key = Object.keys(jsonObject);
     // １日ずつ処理
-    for (item of key) {
+    for (var item of key) {
       if (typeof jsonObject[item] === 'object') {
-        date = new Date(item);
+         var date = new Date(item);
         if (start_date <= date && date <= end_date) {
-          if (jsonObject[item].hasOwnProperty('follows_count')) {
+          if (Object.prototype.hasOwnProperty.call(jsonObject[item], 'follows_count')) {
             result.follows_count[item] = jsonObject[item].follows_count;
           }
-          if (jsonObject[item].hasOwnProperty('new_follows_count')) {
+          if (Object.prototype.hasOwnProperty.call(jsonObject[item], 'new_follows_count')) {
             result.new_follows_count[item] = jsonObject[item].new_follows_count;
           }
-          if (jsonObject[item].hasOwnProperty('deleted_follows_count')) {
+          if (Object.prototype.hasOwnProperty.call(jsonObject[item], 'deleted_follows_count')) {
             result.deleted_follows_count[item] = jsonObject[item].deleted_follows_count;
           }
-          if (jsonObject[item].hasOwnProperty('followers_count')) {
+          if (Object.prototype.hasOwnProperty.call(jsonObject[item], 'followers_count')) {
             result.followers_count[item] = jsonObject[item].followers_count;
           }
-          if (jsonObject[item].hasOwnProperty('new_followers_count')) {
+          if (Object.prototype.hasOwnProperty.call(jsonObject[item], 'new_followers_count')) {
             result.new_followers_count[item] = jsonObject[item].new_followers_count;
           }
-          if (jsonObject[item].hasOwnProperty('deleted_followers_count')) {
+          if (Object.prototype.hasOwnProperty.call(jsonObject[item], 'deleted_followers_count')) {
             result.deleted_followers_count[item] = jsonObject[item].deleted_followers_count;
           }
-          if (jsonObject[item].hasOwnProperty('ff_ratio')) {
+          if (Object.prototype.hasOwnProperty.call(jsonObject[item], 'ff_ratio')) {
             result.ff_ratio[item] = jsonObject[item].ff_ratio;
           }
         }
@@ -91,7 +91,7 @@ exports.get = function (user_id, start_date, end_date) {
     console.log('json file does not exist');
   }
   return result;
-};
+}
 
 
 // ffsに保存するようの関数
@@ -112,16 +112,16 @@ function saveToFfs(user_id, followsObject, followersObject) {
   if (fs.existsSync(filename)) {
     console.log('json file exist');
     // jsonから日付取得,今日の日付のデータがあるかの確認
-    obj = JSON.parse(fs.readFileSync(filename, 'utf8'));
+    var obj = JSON.parse(fs.readFileSync(filename, 'utf8'));
     const k = Object.keys(obj);
 
     if (k.indexOf(today) === -1) {
       // 今日のデータがない場合には、今日のデータ＆前日との比較データを追記
       console.log("this is today's first data");
       const o = (Object.values(obj)).slice(-1)[0].follows;
-      diff_follow = diff.ObjectArrays(o, followsObject);
+      var diff_follow = diff.ObjectArrays(o, followsObject);
       const o2 = (Object.values(obj)).slice(-1)[0].followers;
-      diff_follower = diff.ObjectArrays(o2, followersObject);
+      var diff_follower = diff.ObjectArrays(o2, followersObject);
 
       const ratio = (Math.round((followersCount / followsCount) * 100)) / 100;
       jsonObject = obj;
@@ -175,3 +175,10 @@ function saveToJson(filename, object) {
     }
   });
 }
+
+
+
+module.exports = {
+  get: get,
+  update: update,
+};

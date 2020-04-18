@@ -10,9 +10,9 @@ const settings = path.join(__dirname, '../../data/settings.json');
 /* GET message listing. */
 router.get('/', (req, res) => {
   const userID = req.user.id;
-  jsonObject = JSON.parse(fs.readFileSync(settings, 'utf8'));
+  const jsonObject = JSON.parse(fs.readFileSync(settings, 'utf8'));
   const index = jsonObject.findIndex((v) => v.id === userID);
-  returnObj = {
+  const returnObj = {
     message: jsonObject[index].message,
     minFollower: jsonObject[index].minFollower,
   };

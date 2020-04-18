@@ -26,7 +26,7 @@ function fromWhich (userID) {
     const only_latest = temp.onlyObjArr1;
     // 最初は相互ではないが最新では相互フォローのユーザー
     const only_latest_user = [];
-    for (item in only_latest) {
+    for ( var item in only_latest) {
       only_latest_user.push(only_latest[item].id_str);
     }
 
@@ -35,9 +35,9 @@ function fromWhich (userID) {
     result.before_follow = [];
 
     // いつフォローしたか、いつフォローされたかを探す
-    for (olUser of only_latest_user) {
-      for (i in obj) {
-        if (obj[i].hasOwnProperty('follows')) {
+    for (var olUser of only_latest_user) {
+      for ( var i in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj[i], 'follows')) {
           const result_follow = obj[i].follows.find((u) => u.id_str === olUser);
           const result_follower = obj[i].followers.find((u) => u.id_str === olUser);
           if (result_follow && result_follower) {
@@ -59,9 +59,9 @@ function fromWhich (userID) {
   }
 
   console.log('json file does not exist');
-};
+}
 
-exports.follower_follower = function (user_id) {
+function follower_follower (user_id) {
   let filename = `${user_id}.json`;
   filename = path.join(__dirname, '../data/ffs/', filename);
 
@@ -76,12 +76,12 @@ exports.follower_follower = function (user_id) {
 
   if (fs.existsSync(filename)) {
     console.log('json file exist');
-    jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
-    obj = Object.values(jsonObject);
-    latest_followers = obj.slice(-1)[0].followers;
+    const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
+    const obj = Object.values(jsonObject);
+    const latest_followers = obj.slice(-1)[0].followers;
 
     // followers_countにより分類してPush
-    for (item in latest_followers) {
+    for (var item in latest_followers) {
       const sc = Number(latest_followers[item].followers_count);
 
       if (sc >= 0 && sc < 100) {
@@ -104,9 +104,9 @@ exports.follower_follower = function (user_id) {
     console.log('json file does not exist');
   }
   return result;
-};
+}
 
-exports.follower_tweet = function (user_id) {
+function follower_tweet (user_id) {
   let filename = `${user_id}.json`;
   filename = path.join(__dirname, '../data/ffs/', filename);
 
@@ -121,12 +121,12 @@ exports.follower_tweet = function (user_id) {
 
   if (fs.existsSync(filename)) {
     console.log('json file exist');
-    jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
-    obj = Object.values(jsonObject);
-    latest_followers = obj.slice(-1)[0].followers;
+    const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
+    const obj = Object.values(jsonObject);
+    const latest_followers = obj.slice(-1)[0].followers;
 
     // followers_countにより分類してPush
-    for (item in latest_followers) {
+    for (var item in latest_followers) {
       const sc = Number(latest_followers[item].statuses_count);
 
       if (sc >= 0 && sc < 100) {
@@ -149,9 +149,9 @@ exports.follower_tweet = function (user_id) {
     console.log('json file does not exist');
   }
   return result;
-};
+}
 
-exports.isProtected = function (user_id) {
+function isProtected (user_id) {
   let filename = `${user_id}.json`;
   filename = path.join(__dirname, '../data/ffs/', filename);
 
@@ -161,12 +161,12 @@ exports.isProtected = function (user_id) {
 
   if (fs.existsSync(filename)) {
     console.log('json file exist');
-    jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
-    obj = Object.values(jsonObject);
-    latest_followers = obj.slice(-1)[0].followers;
+    const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
+    const obj = Object.values(jsonObject);
+    const latest_followers = obj.slice(-1)[0].followers;
 
     // followers_countにより分類してPush
-    for (item in latest_followers) {
+    for (var item in latest_followers) {
       if (latest_followers[item].protected) {
         result.protected.push(latest_followers[item]);
       } else {
@@ -177,10 +177,10 @@ exports.isProtected = function (user_id) {
     console.log('json file does not exist');
   }
   return result;
-};
+}
 
 
-exports.follower_continue = function (user_id, start_date, end_date) {
+ function follower_continue (user_id, start_date, end_date) {
   let filename = `${user_id}.json`;
   filename = path.join(__dirname, '../data/ffs/', filename);
 
@@ -190,23 +190,23 @@ exports.follower_continue = function (user_id, start_date, end_date) {
     console.log('json file exist');
     start_date = new Date(start_date);
     end_date = new Date(end_date);
-    jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
-    key = Object.keys(jsonObject);
+    const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
+    const key = Object.keys(jsonObject);
 
-    for (item of key) {
+    for (var item of key) {
       if (typeof jsonObject[item] === 'object') {
-        date = new Date(item);
+        var date = new Date(item);
         if (start_date <= date && date <= end_date) {
-          if (jsonObject[item].hasOwnProperty('new_followers')) {
+          if (Object.prototype.hasOwnProperty.call(jsonObject[item], 'new_followers')) {
             result[item] = {};
             result[item].new_followers = jsonObject[item].new_followers_count;
             // new_followersのゆーざーがいつdeleted_followersに入っているか
 
-            for (item2 of key) {
+            for (var item2 of key) {
               if (typeof jsonObject[item2] === 'object') {
-                searched_date = new Date(item2);
+                var searched_date = new Date(item2);
                 if (date < searched_date) {
-                  if (jsonObject[item].hasOwnProperty('deleted_followers')) {
+                  if (Object.prototype.hasOwnProperty.call(jsonObject[item], 'deleted_followers')) {
                     // console.log(Object.(jsonObject[item2]).deleted_followers);
                     // new_followerとdeleted_followerに重複があるかの確認
                     const same_id = [];
@@ -214,11 +214,11 @@ exports.follower_continue = function (user_id, start_date, end_date) {
                       const same = jsonObject[item].new_followers.filter(
                         (y) => x.id_str === y.id_str,
                       );
-                      for (l in same) {
+                      same.forEach(function(){
                         const varkey = same[key];
                         same_id.push(varkey);
-                      }
-                      deleted_count = same_id.length;
+                      });
+                      var deleted_count = same_id.length;
                       if (deleted_count != 0) {
                         result[item][item2] = deleted_count;
                       }
@@ -235,9 +235,9 @@ exports.follower_continue = function (user_id, start_date, end_date) {
     console.log('json file does not exist');
   }
   return result;
-};
+}
 
-exports.deactives = function (userID) {
+ function deactives (userID) {
   let filename = `${userID}.json`;
   filename = path.join(__dirname, '../data/ffs/', filename);
 
@@ -249,12 +249,12 @@ exports.deactives = function (userID) {
 
     const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
     const latest_follows = (Object.values(jsonObject)).slice(-1)[0].follows;
-    activate_day = new Date();
+    let activate_day = new Date();
     activate_day.setDate(activate_day.getDate() - 30);
 
-    for (obj of latest_follows) {
-      if (obj.hasOwnProperty('status')) {
-        date = new Date(obj.status.created_at);
+    for (var obj of latest_follows) {
+      if (Object.prototype.hasOwnProperty.call(obj, 'status')) {
+        const date = new Date(obj.status.created_at);
         if (activate_day < date) {
           result.active.push(obj);
         } else {
@@ -267,12 +267,12 @@ exports.deactives = function (userID) {
   }
 
   return result;
-};
+}
 
 function keywords_followbacks(userID) {
   const filename = `${userID}.json`;
-  file_logs = path.join(__dirname, '../logs/follow-logs/', filename);
-  file_ffs = path.join(__dirname, '../data/ffs/', filename);
+  const file_logs = path.join(__dirname, '../logs/follow-logs/', filename);
+  const file_ffs = path.join(__dirname, '../data/ffs/', filename);
   const result = [];
   const key_id = {};
   if (fs.existsSync(file_logs) && fs.existsSync(file_ffs)) {
@@ -280,8 +280,8 @@ function keywords_followbacks(userID) {
     const ffsObject = JSON.parse(fs.readFileSync(file_ffs, 'utf8'));
     const latest_followers = (Object.values(ffsObject)).slice(-1)[0].followers;
 
-    for (item in logsObject) {
-      keyword = logsObject[item].keyword;
+    for (var item in logsObject) {
+      var keyword = logsObject[item].keyword;
       console.log(typeof (keyword));
       if (keyword != null && Object.keys(key_id).indexOf(keyword) === -1) {
         key_id[keyword] = [logsObject[item].user];
@@ -290,7 +290,7 @@ function keywords_followbacks(userID) {
       }
     }
     console.log(key_id);
-    for (keys in key_id) {
+    for ( var keys in key_id) {
       // console.log(key);
       // console.log(key_id[key]);
       // console.log(latest_followers);
@@ -298,7 +298,7 @@ function keywords_followbacks(userID) {
       // console.log(followedID);
       const unfollowedID = diff.ObjectArrays(key_id[keys], latest_followers).onlyObjArr1;
       // console.log(unfollowedID);
-      resultObj = {
+      const resultObj = {
         keyword: keys,
         follower: followedID,
         notFollower: unfollowedID,
@@ -316,5 +316,10 @@ function keywords_followbacks(userID) {
 
 module.exports = {
   fromWhich: fromWhich,
+  follower_follower: follower_follower,
+  follower_tweet: follower_tweet,
+  isProtected: isProtected,
+  follower_continue: follower_continue,
+  deactives: deactives,
   keywords_followbacks: keywords_followbacks
 };

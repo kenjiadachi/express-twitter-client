@@ -1,14 +1,7 @@
 const express = require('express');
-
 const router = express.Router();
-const path = require('path');
-const fs = require('fs');
-const saveToJson = require('../../func/saveToJson');
 const ffs = require('../../func/ffs');
-
-const settings = path.join(__dirname, '../../data/settings.json');
 const url = require('url');
-
 let urlInfo;
 
 

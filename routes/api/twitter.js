@@ -9,7 +9,7 @@ let urlInfo;
 
 router.get('/search', (req, res) => {
   const userID = req.user.id;
-  client = twitter.init(userID);
+  const client = twitter.init(userID);
   // クエリー文字列を含めてurl情報を取得（trueオプションでクエリ文字列も取得）
   urlInfo = url.parse(req.url, true);
   const options = {};
@@ -19,7 +19,7 @@ router.get('/search', (req, res) => {
   if (urlInfo.query.count) {
     options.count = urlInfo.query.count;
   }
-  client.get('search/tweets', options, (error, tweets, response) => {
+  client.get('search/tweets', options, (error, tweets) => {
     res.json(tweets);
   });
 });
