@@ -12,10 +12,7 @@ function keywords_toarray(){
       var forAPIlist = []
       if(Object.keys(item).indexOf('token') !== -1 && Object.keys(item).indexOf('tokenSecret') !== -1){
         if(Object.keys(item).indexOf('keywords') !== -1){
-          keywords = item.keywords.slice(1,-1);
-          keywords = keywords.replace(/'/g, '');
-          keywords = keywords.replace(/ /g, '');
-          keywords = keywords.split(',');
+          keywords = item.keywords.split(',');
           for (keyword of keywords){
             // APIを叩く
 
@@ -25,10 +22,7 @@ function keywords_toarray(){
           }
         }
         if(Object.keys(item).indexOf('accounts') !== -1){
-          accounts = item.accounts.slice(1,-1);
-          accounts = accounts.replace(/'/g, '');
-          accounts = accounts.replace(/ /g, '');
-          accounts = accounts.split(',');
+          accounts = item.accounts.split(',');
           for (account of accounts){
             let jsonfile = path.join( __dirname, '../data/ffs/', account + '.json');
 
