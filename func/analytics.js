@@ -61,8 +61,8 @@ function fromWhich (userID) {
   console.log('json file does not exist');
 }
 
-function follower_follower (user_id) {
-  let filename = `${user_id}.json`;
+function follower_follower (userID) {
+  let filename = `${userID}.json`;
   filename = path.join(__dirname, '../data/ffs/', filename);
 
   const result = {};
@@ -106,8 +106,8 @@ function follower_follower (user_id) {
   return result;
 }
 
-function follower_tweet (user_id) {
-  let filename = `${user_id}.json`;
+function follower_tweet (userID) {
+  let filename = `${userID}.json`;
   filename = path.join(__dirname, '../data/ffs/', filename);
 
   const result = {};
@@ -151,8 +151,8 @@ function follower_tweet (user_id) {
   return result;
 }
 
-function isProtected (user_id) {
-  let filename = `${user_id}.json`;
+function isProtected (userID) {
+  let filename = `${userID}.json`;
   filename = path.join(__dirname, '../data/ffs/', filename);
 
   const result = {};
@@ -180,8 +180,8 @@ function isProtected (user_id) {
 }
 
 
- function follower_continue (user_id, start_date, end_date) {
-  let filename = `${user_id}.json`;
+ function follower_continue (userID, start_date, end_date) {
+  let filename = `${userID}.json`;
   filename = path.join(__dirname, '../data/ffs/', filename);
 
   const result = {};

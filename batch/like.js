@@ -5,12 +5,12 @@ function like(){
   const filename = path.join( __dirname, '../data/', 'settings.json');
   if(fs.existsSync(filename)){
     const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
-    for(item of jsonObject){
-      var forAPIlist = []
+    for(var item of jsonObject){
+      var forAPIlist = [];
       if(Object.keys(item).indexOf('token') !== -1 && Object.keys(item).indexOf('tokenSecret') !== -1){
         if(Object.keys(item).indexOf('keywords') !== -1){
-          keywords = item.keywords.split(',');
-          for (keyword of keywords){
+          const keywords = item.keywords.split(',');
+          for (var keyword of keywords){
             // keywordそれぞれに対して
             // https://api.twitter.com/1.1/search/tweets.jsonを実行
             // 結果
@@ -30,19 +30,19 @@ function like(){
           }
         }
         if(Object.keys(item).indexOf('accounts') !== -1){
-          accounts = item.accounts.split(',');
-          for (account of accounts){
+          const accounts = item.accounts.split(',');
+          for (var account of accounts){
             let jsonfile = path.join( __dirname, '../data/ffs/', account + '.json');
             if(fs.existsSync(jsonfile)){
                 // ffsにid.jsonがあれば最新のfollowerを取得してforAPIListに追加
                 console.log(jsonfile);
                 let ffsObject = JSON.parse(fs.readFileSync(jsonfile, 'utf8'));
                 let latest_followers = (Object.values(ffsObject)).slice(-1)[0].followers;
-                for (i of latest_followers){
+                for (let i of latest_followers){
                   let tmpObj = {
                     "accountID": account,
                     "tweetID": i.status.id_str
-                  }
+                  };
                   forAPIlist.push(tmpObj);
                 }
 
@@ -62,3 +62,7 @@ function like(){
     console.log("json file does not exist");
   }
 }
+
+module.exports = {
+  like: like,
+};

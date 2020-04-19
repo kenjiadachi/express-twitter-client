@@ -6,20 +6,20 @@ const ffs = require('./ffs');
 
 
 // token, tokenSecretを保存する
-async function tokens (user_id, token, tokenSecret) {
+async function tokens (userID, token, tokenSecret) {
   let jsonObject = [];
   if (fs.existsSync(settings)) {
     console.log('settings.json file exists.');
     jsonObject = JSON.parse(fs.readFileSync(settings, 'utf8'));
 
-    const search = jsonObject.findIndex((v) => v.id === user_id);
+    const search = jsonObject.findIndex((v) => v.id === userID);
 
     if (search != -1) {
       jsonObject[search].token = token;
       jsonObject[search].tokenSecret = tokenSecret;
     } else {
       jsonObject.push({
-        id: user_id,
+        id: userID,
         token,
         tokenSecret,
       });
@@ -28,31 +28,31 @@ async function tokens (user_id, token, tokenSecret) {
     // settings.jsonがないときの処理
     console.log('settings.json file does not exist');
     jsonObject.push({
-      id: user_id,
+      id: userID,
       token,
       tokenSecret,
     });
   }
-  ffs.update(user_id, token, tokenSecret);
+  ffs.update(userID, token, tokenSecret);
   saveToJson(settings, jsonObject);
 }
 
 
 // keywordsを保存する
-function keywords (user_id, keywords) {
+function keywords (userID, keywords) {
   let jsonObject = [];
   if (fs.existsSync(settings)) {
     console.log('settings.json file exists.');
     jsonObject = JSON.parse(fs.readFileSync(settings, 'utf8'));
 
-    const search = jsonObject.findIndex((v) => v.id === user_id);
+    const search = jsonObject.findIndex((v) => v.id === userID);
 
     if (search != -1) {
       console.log(jsonObject[search].keywords);
       jsonObject[search].keywords = keywords;
     } else {
       jsonObject.push({
-        id: user_id,
+        id: userID,
         keywords,
       });
     }
@@ -60,7 +60,7 @@ function keywords (user_id, keywords) {
     // settings.jsonがないときの処理
     console.log('settings.json file does not exist');
     jsonObject.push({
-      id: user_id,
+      id: userID,
       keywords,
     });
     console.log(jsonObject);
@@ -70,13 +70,13 @@ function keywords (user_id, keywords) {
 }
 
 // messages, min_followerを保存する
- function message (user_id, message, minFollower) {
+ function message (userID, message, minFollower) {
   let jsonObject = [];
   if (fs.existsSync(settings)) {
     console.log('settings.json file exists.');
     jsonObject = JSON.parse(fs.readFileSync(settings, 'utf8'));
 
-    const search = jsonObject.findIndex((v) => v.id === user_id);
+    const search = jsonObject.findIndex((v) => v.id === userID);
 
     if (search != -1) {
       console.log(jsonObject[search].message);
@@ -84,7 +84,7 @@ function keywords (user_id, keywords) {
       jsonObject[search].minFollower = minFollower;
     } else {
       jsonObject.push({
-        id: user_id,
+        id: userID,
         message,
         minFollower,
       });
@@ -93,7 +93,7 @@ function keywords (user_id, keywords) {
     // settings.jsonがないときの処理
     console.log('settings.json file does not exist');
     jsonObject.push({
-      id: user_id,
+      id: userID,
       message,
       minFollower,
     });
@@ -104,20 +104,20 @@ function keywords (user_id, keywords) {
 
 
 // accountsを保存する
- function accounts (user_id, accounts) {
+ function accounts (userID, accounts) {
   let jsonObject = [];
   if (fs.existsSync(settings)) {
     console.log('settings.json file exists.');
     jsonObject = JSON.parse(fs.readFileSync(settings, 'utf8'));
 
-    const search = jsonObject.findIndex((v) => v.id === user_id);
+    const search = jsonObject.findIndex((v) => v.id === userID);
 
     if (search != -1) {
       console.log(jsonObject[search].accounts);
       jsonObject[search].accounts = accounts;
     } else {
       jsonObject.push({
-        id: user_id,
+        id: userID,
         accounts,
       });
     }
@@ -125,7 +125,7 @@ function keywords (user_id, keywords) {
     // settings.jsonがないときの処理
     console.log('settings.json file does not exist');
     jsonObject.push({
-      id: user_id,
+      id: userID,
       accounts,
     });
     console.log(jsonObject);

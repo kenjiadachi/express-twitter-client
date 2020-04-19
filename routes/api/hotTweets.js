@@ -24,7 +24,7 @@ router.get('/sum', (req, res) => {
     endDate = new Date(urlInfo.query.endDate);
   }
 
-  options.user_id = userID;
+  options.userID = userID;
   options.include_rts = false;
   options.count = 200;
   client.get('statuses/user_timeline', options)
@@ -57,7 +57,7 @@ router.get('/rt', (req, res) => {
     endDate = new Date(urlInfo.query.endDate);
   }
 
-  options.user_id = userID;
+  options.userID = userID;
   options.include_rts = false;
   options.count = 200;
   client.get('statuses/user_timeline', options)
@@ -90,7 +90,7 @@ router.get('/like', (req, res) => {
     endDate = new Date(urlInfo.query.endDate);
   }
 
-  options.user_id = userID;
+  options.userID = userID;
   options.include_rts = false;
   options.count = 200;
   client.get('statuses/user_timeline', options)

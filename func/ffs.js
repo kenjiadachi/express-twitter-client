@@ -4,13 +4,13 @@ const diff = require('./diff');
 const twitter = require('./twitter');
 
 // 引数: オブジェクトの配列、オブジェクトの配列、String
- async function update (user_id, token, tokenSecret) {
+ async function update (userID, token, tokenSecret) {
   // ここにffsの関数入れる
   const client = twitter.initWithToken(token, tokenSecret);
   let followerList = [];
   let followList = [];
   const options = {};
-  options.user_id = user_id;
+  options.userID = userID;
   options.count = 200;
   options.cursor = -1;
   try {
@@ -33,14 +33,14 @@ const twitter = require('./twitter');
         });
     } while (options.cursor != 0);
 
-    saveToFfs(user_id, followList, followerList);
+    saveToFfs(userID, followList, followerList);
   } catch (err) {
     console.log(err);
   }
 }
 
-function get (user_id, start_date, end_date) {
-  let filename = `${user_id}.json`;
+function get (userID, start_date, end_date) {
+  let filename = `${userID}.json`;
   filename = path.join(__dirname, '../data/ffs/', filename);
   start_date = new Date(start_date);
   end_date = new Date(end_date);
@@ -95,7 +95,7 @@ function get (user_id, start_date, end_date) {
 
 
 // ffsに保存するようの関数
-function saveToFfs(user_id, followsObject, followersObject) {
+function saveToFfs(userID, followsObject, followersObject) {
   const followsCount = followsObject.length;
   const followersCount = followersObject.length;
 
@@ -103,7 +103,7 @@ function saveToFfs(user_id, followsObject, followersObject) {
   const date = new Date();
   const today = `${date.getFullYear()}-${(`0${date.getMonth() + 1}`).slice(-2)}-${(`0${date.getDate()}`).slice(-2)}`;
 
-  let filename = `${user_id}.json`;
+  let filename = `${userID}.json`;
   filename = path.join(__dirname, '../data/ffs/', filename);
 
   let jsonObject = {};

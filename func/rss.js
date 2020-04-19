@@ -1,21 +1,7 @@
 var fs = require('fs');
 const path = require('path');
 
-sample_obj =  {
-    "id": 1,
-    "created_at": "Thu Apr 06 15:24:15 +0000 2017",
-    "text": "1\\/ Today we\\u2019re sharing our vision for the future of the Twitter API platform!\\nhttps:\\/\\/t.co\\/XweGngmxlP",
-    "media": {
-      "media": "https://via.placeholder.com/150"
-    },
-    "created_by": 1,
-    "tweeted_at": "Thu Apr 06 15:24:15 +0000 2017"
-  };
-create_reserved("1",sample_obj);
-//console.log(get_reserved("2"));
-//deleteObj("1",2);
-
-function get_reserved(userID) {
+function get(userID) {
   const filename = path.join( __dirname, '../data/rss/', userID + '.json');
   let result = [];
   if(fs.existsSync(filename)){
@@ -27,7 +13,7 @@ function get_reserved(userID) {
   return result;
 }
 
-function create_reserved(userID, tweetObj){
+function create(userID, rssObj){
   const filename = path.join( __dirname, '../data/rss/', userID + '.json');
   let jsonObject= [];
   if(fs.existsSync(filename)){
@@ -35,30 +21,31 @@ function create_reserved(userID, tweetObj){
     console.log(jsonObject);
     if(jsonObject.length === 0){
       // 新しく作成
-      tweetObj["id"] = 1;
+      rssObj["id"] = 1;
     }
     else{
       let latest_id = (Object.values(jsonObject)).slice(-1)[0].id;
-      tweetObj["id"] = Number(latest_id) + 1;
+      rssObj["id"] = Number(latest_id) + 1;
     }
   }
   else{
     // 新しく作成
-    tweetObj["id"] = 1;
+    rssObj["id"] = 1;
   }
-  jsonObject.push(tweetObj);
+  jsonObject.push(rssObj);
   saveToFile(filename, jsonObject);
+  return jsonObject;
 }
 
 function deleteObj(userID, objID){
   const filename = path.join( __dirname, '../data/rss/', userID + '.json');
   if(fs.existsSync(filename)){
-    jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
+    const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
     let result = jsonObject.filter(function(item) {
       return item.id != objID;
     });
-    console.log(result);
     saveToFile(filename, result);
+    return result;
   }
   else {
     console.log('json file does not exist');
@@ -79,3 +66,9 @@ function saveToFile(filename, object) {
     }
   });
 }
+
+module.exports = {
+  get: get,
+  create: create,
+  deleteObj: deleteObj
+};

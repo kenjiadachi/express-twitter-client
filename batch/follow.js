@@ -1,9 +1,7 @@
 var fs = require('fs');
 const path = require('path');
 
-keywords_toarray();
-
-function keywords_toarray(){
+function follow(){
   const filename = path.join( __dirname, '../data/', 'settings.json');
   if(fs.existsSync(filename)){
     const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
@@ -15,7 +13,6 @@ function keywords_toarray(){
           var keywords = item.keywords.split(',');
           for (var keyword of keywords){
             // APIを叩く
-            console.lof(keyword);
             // 結果
 
             // forAPIlist.push()
@@ -59,3 +56,8 @@ function keywords_toarray(){
     console.log("json file does not exist");
   }
 }
+
+
+module.exports = {
+  follow: follow,
+};
