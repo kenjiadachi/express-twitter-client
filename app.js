@@ -7,9 +7,7 @@ const logger = require('morgan');
 const passport = require('passport');
 const TwitterStrategy = require('passport-twitter').Strategy;
 const config = require('./config');
-const url = require('url');
-const saveToJson = require('./func/saveToJson')
-let urlInfo;
+const saveToJson = require('./func/saveToJson');
 
 // Twitterのテスト用
 // const twitterRouter = require('./routes/api/twitter');
@@ -45,8 +43,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.all('/api/*', function(request, response, next){
-  // クエリー文字列を含めてurl情報を取得（trueオプションでクエリ文字列も取得）
-  urlInfo = url.parse(request.url, true);
   // jsonでレスポンス（外部の人もアクセスできるようにAccess-Control-Allow-Originを設定）
   response.contentType('json');
   response.header('Access-Control-Allow-Origin', '*');
@@ -62,7 +58,7 @@ passport.use(new TwitterStrategy({
   // 認証後の処理
   function(token, tokenSecret, profile, done) {
     // tokenを./data/settings.jsonに保存
-    saveToJson.tokens(profile.id, token, tokenSecret)
+    saveToJson.tokens(profile.id, token, tokenSecret);
     return done(null, profile);
   }
 ));
@@ -108,7 +104,7 @@ app.use(function(req, res, next) {
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

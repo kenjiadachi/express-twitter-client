@@ -1,9 +1,6 @@
 var fs = require('fs');
 const path = require('path');
 
-unfollow("2",{"fsef":"ese"});
-
-
 function follow (userID, keyword, accountID, user) {
   let jsonfile = path.join( __dirname, '../logs/follow-logs/', userID + '.json');
   let jsonObject = [];
@@ -14,15 +11,15 @@ function follow (userID, keyword, accountID, user) {
   else{
     // fileがなければ新しく作る
   }
-  now = new Date();
-  date = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2) + " "
+  const now = new Date();
+  const date = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2) + " "
         + ("0" + now.getHours()).slice(-2) + ":" + ("0" + now.getMinutes()).slice(-2) + ":" + ("0" + now.getSeconds()).slice(-2);
   let tmpObj = {
       "created_at": date,
       "keyword": keyword,
       "account_id": accountID,
       "user": user
-  }
+  };
   jsonObject.push(tmpObj);
   saveToLogs(jsonfile,jsonObject);
 }
@@ -37,15 +34,15 @@ function like (userID, keyword, accountID, tweet) {
   else{
     // fileがなければ新しく作る
   }
-  now = new Date();
-  date = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2) + " "
+  const now = new Date();
+  const date = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2) + " "
         + ("0" + now.getHours()).slice(-2) + ":" + ("0" + now.getMinutes()).slice(-2) + ":" + ("0" + now.getSeconds()).slice(-2);
   let tmpObj = {
       "created_at": date,
       "keyword": keyword,
       "account_id": accountID,
       "tweet": tweet
-  }
+  };
   jsonObject.push(tmpObj);
   saveToLogs(jsonfile,jsonObject);
 }
@@ -60,15 +57,15 @@ function dm (userID, keyword, message, user) {
   else{
     // fileがなければ新しく作る
   }
-  now = new Date();
-  date = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2) + " "
+  const now = new Date();
+  const date = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2) + " "
         + ("0" + now.getHours()).slice(-2) + ":" + ("0" + now.getMinutes()).slice(-2) + ":" + ("0" + now.getSeconds()).slice(-2);
   let tmpObj = {
       "created_at": date,
       "keyword": keyword,
       "message": message,
       "user": user
-  }
+  };
   jsonObject.push(tmpObj);
   saveToLogs(jsonfile,jsonObject);
 }
@@ -83,13 +80,13 @@ function unfollow (userID, user) {
   else{
     // fileがなければ新しく作る
   }
-  now = new Date();
-  date = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2) + " "
+  const now = new Date();
+  const date = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2) + " "
         + ("0" + now.getHours()).slice(-2) + ":" + ("0" + now.getMinutes()).slice(-2) + ":" + ("0" + now.getSeconds()).slice(-2);
   let tmpObj = {
       "created_at": date,
       "user": user
-  }
+  };
   jsonObject.push(tmpObj);
   saveToLogs(jsonfile,jsonObject);
 }
@@ -100,12 +97,20 @@ function saveToLogs(filename, object) {
   fs.writeFile(filename, JSON.stringify(object) , (err) => {
     // 書き出しに失敗した場合
     if(err){
-      console.log("エラーが発生しました。" + err)
-      throw err
+      console.log("エラーが発生しました。" + err);
+      throw err;
     }
     // 書き出しに成功した場合
     else{
-      console.log("ファイルが正常に書き出しされました")
+      console.log("ファイルが正常に書き出しされました");
     }
   });
 }
+
+
+module.exports = {
+  follow: follow,
+  like: like,
+  dm: dm,
+  unfollow: unfollow,
+};
