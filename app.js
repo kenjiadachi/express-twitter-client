@@ -20,6 +20,8 @@ const accountsRouter = require('./routes/api/accounts');
 const hotTweetsRouter = require('./routes/api/hotTweets');
 const analyticsRouter = require('./routes/api/analytics');
 const ffsRouter = require('./routes/api/ffs');
+const reservedTweetsRouter = require('./routes/api/reservedTweets');
+const rssRouter = require('./routes/api/rss');
 
 let app = express();
 
@@ -78,11 +80,13 @@ app.use('/success', usersRouter);
 app.use('/api/keywords', keywordsRouter);
 app.use('/api/messages', messagesRouter);
 app.use('/api/accounts', accountsRouter);
+app.use('/api/reserved-tweets', reservedTweetsRouter);
+app.use('/api/rss', rssRouter);
 
 
 // twitter絡む系API
 // app.use('/api/twitter', twitterRouter);
-app.use('/api/hot-tweet', hotTweetsRouter);
+app.use('/api/hot-tweets', hotTweetsRouter);
 app.use('/api/ffs', ffsRouter);
 app.use('/api/analytics', analyticsRouter);
 

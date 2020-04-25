@@ -13,14 +13,14 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
   const userID = req.user.id;
   const rssObj = req.body;
-  const returnObj = reservedTweets.post(userID, rssObj);
+  const returnObj = reservedTweets.create(userID, rssObj);
   res.json(returnObj);
 });
 
 router.delete('/:id', (req, res) => {
   const userID = req.user.id;
   const rssID = req.params.id;
-  const returnObj = reservedTweets.post(userID, rssID);
+  const returnObj = reservedTweets.deleteObj(userID, rssID);
   res.json(returnObj);
 });
 

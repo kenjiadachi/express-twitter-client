@@ -282,22 +282,15 @@ function keywords_followbacks(userID) {
 
     for (var item in logsObject) {
       var keyword = logsObject[item].keyword;
-      console.log(typeof (keyword));
       if (keyword != null && Object.keys(key_id).indexOf(keyword) === -1) {
         key_id[keyword] = [logsObject[item].user];
       } else if (keyword != null && Object.keys(key_id).indexOf(keyword) !== -1) {
         key_id[keyword].push(logsObject[item].user);
       }
     }
-    console.log(key_id);
     for ( var keys in key_id) {
-      // console.log(key);
-      // console.log(key_id[key]);
-      // console.log(latest_followers);
       const followedID = diff.ObjectArrays(key_id[keys], latest_followers).common;
-      // console.log(followedID);
       const unfollowedID = diff.ObjectArrays(key_id[keys], latest_followers).onlyObjArr1;
-      // console.log(unfollowedID);
       const resultObj = {
         keyword: keys,
         follower: followedID,

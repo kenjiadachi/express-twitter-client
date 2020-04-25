@@ -18,7 +18,6 @@ function create(userID, rssObj){
   let jsonObject= [];
   if(fs.existsSync(filename)){
     jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
-    console.log(jsonObject);
     if(jsonObject.length === 0){
       // 新しく作成
       rssObj["id"] = 1;

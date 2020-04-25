@@ -13,14 +13,14 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
   const userID = req.user.id;
   const rssObj = req.body;
-  const returnObj = rss.post(userID, rssObj);
+  const returnObj = rss.create(userID, rssObj);
   res.json(returnObj);
 });
 
 router.delete('/:id', (req, res) => {
   const userID = req.user.id;
   const rssID = req.params.id;
-  const returnObj = rss.post(userID, rssID);
+  const returnObj = rss.deleteObj(userID, rssID);
   res.json(returnObj);
 });
 
