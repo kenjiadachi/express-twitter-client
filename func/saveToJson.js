@@ -6,22 +6,31 @@ const ffs = require('./ffs');
 
 
 // token, tokenSecretを保存する
-async function tokens (userID, token, tokenSecret) {
+async function tokens (userID, token, tokenSecret, name, screenName) {
   let jsonObject = [];
   if (fs.existsSync(settings)) {
     console.log('settings.json file exists.');
     jsonObject = JSON.parse(fs.readFileSync(settings, 'utf8'));
 
     const search = jsonObject.findIndex((v) => v.id === userID);
+    const now = new Date();
+    const date = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2) + " "
+          + ("0" + now.getHours()).slice(-2) + ":" + ("0" + now.getMinutes()).slice(-2) + ":" + ("0" + now.getSeconds()).slice(-2);
 
     if (search != -1) {
       jsonObject[search].token = token;
       jsonObject[search].tokenSecret = tokenSecret;
+      jsonObject[search].name = name;
+      jsonObject[search].screenName = screenName;
+      jsonObject[search].updated_at = date;
     } else {
       jsonObject.push({
         id: userID,
-        token,
-        tokenSecret,
+        token: token,
+        tokenSecret: tokenSecret,
+        name: name,
+        screen_name: screenName,
+        created_at: date
       });
     }
   } else {
@@ -29,8 +38,11 @@ async function tokens (userID, token, tokenSecret) {
     console.log('settings.json file does not exist');
     jsonObject.push({
       id: userID,
-      token,
-      tokenSecret,
+      token: token,
+      tokenSecret: tokenSecret,
+      name: name,
+      screen_name: screenName,
+      created_at: date
     });
   }
   ffs.update(userID, token, tokenSecret);
