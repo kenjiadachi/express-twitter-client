@@ -10,7 +10,7 @@ async function tokens (userID, token, tokenSecret, name, screenName) {
   let jsonObject = [];
   const now = new Date();
   const date = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2) + " " + ("0" + now.getHours()).slice(-2) + ":" + ("0" + now.getMinutes()).slice(-2) + ":" + ("0" + now.getSeconds()).slice(-2);
-  
+
   if (fs.existsSync(settings)) {
     console.log('settings.json file exists.');
     jsonObject = JSON.parse(fs.readFileSync(settings, 'utf8'));
@@ -130,7 +130,7 @@ function keywords (userID, keywords) {
     } else {
       jsonObject.push({
         id: userID,
-        accounts,
+        accounts: accounts,
       });
     }
   } else {
@@ -138,7 +138,7 @@ function keywords (userID, keywords) {
     console.log('settings.json file does not exist');
     jsonObject.push({
       id: userID,
-      accounts,
+      accounts: accounts,
     });
     console.log(jsonObject);
   }
