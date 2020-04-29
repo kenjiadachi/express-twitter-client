@@ -6,31 +6,31 @@ const analytics = require('../../func/analytics');
 
 let urlInfo;
 
-router.get('/from_which', (req, res) => {
+router.get('/from-which', (req, res) => {
   const userID = req.user.id;
   const returnObj = analytics.fromWhich(userID);
   res.json(returnObj);
 });
 
-router.get('/follower_follower', (req, res) => {
+router.get('/followers/follower', (req, res) => {
   const userID = req.user.id;
   const returnObj = analytics.follower_follower(userID);
   res.json(returnObj);
 });
 
-router.get('/follower_tweet', (req, res) => {
+router.get('/followers/tweet', (req, res) => {
   const userID = req.user.id;
   const returnObj = analytics.follower_tweet(userID);
   res.json(returnObj);
 });
 
-router.get('/follower_protected', (req, res) => {
+router.get('/followers/is-protected', (req, res) => {
   const userID = req.user.id;
   const returnObj = analytics.isProtected(userID);
   res.json(returnObj);
 });
 
-router.get('/follower_continue', (req, res) => {
+router.get('/followers/continue', (req, res) => {
   const userID = req.user.id;
 
   // クエリー文字列を含めてurl情報を取得（trueオプションでクエリ文字列も取得）
@@ -49,13 +49,13 @@ router.get('/follower_continue', (req, res) => {
   res.json(returnObj);
 });
 
-router.get('/deactives', (req, res) => {
+router.get('/follows/deactives', (req, res) => {
   const userID = req.user.id;
   const returnObj = analytics.deactives(userID);
   res.json(returnObj);
 });
 
-router.get('/keywords_followbacks', (req, res) => {
+router.get('/keywords/followbacks', (req, res) => {
   const userID = req.user.id;
   const returnObj = analytics.keywords_followbacks(userID);
   res.json(returnObj);

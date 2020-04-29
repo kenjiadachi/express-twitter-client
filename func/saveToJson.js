@@ -3,33 +3,33 @@ const fs = require('fs');
 
 const settings = path.join(__dirname, '../data/settings.json');
 const ffs = require('./ffs');
+const format = require('./format');
 
 
 // token, tokenSecretを保存する
-async function tokens (userID, token, tokenSecret, name, screenName) {
+async function tokens (userID, token, tokenSecret, userObj) {
   let jsonObject = [];
+  const now = new Date();
+  const date = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2) + " " + ("0" + now.getHours()).slice(-2) + ":" + ("0" + now.getMinutes()).slice(-2) + ":" + ("0" + now.getSeconds()).slice(-2);
+  const formattedUser = format.user(userObj);
+
   if (fs.existsSync(settings)) {
     console.log('settings.json file exists.');
     jsonObject = JSON.parse(fs.readFileSync(settings, 'utf8'));
 
     const search = jsonObject.findIndex((v) => v.id === userID);
-    const now = new Date();
-    const date = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2) + " "
-          + ("0" + now.getHours()).slice(-2) + ":" + ("0" + now.getMinutes()).slice(-2) + ":" + ("0" + now.getSeconds()).slice(-2);
 
     if (search != -1) {
       jsonObject[search].token = token;
       jsonObject[search].tokenSecret = tokenSecret;
-      jsonObject[search].name = name;
-      jsonObject[search].screenName = screenName;
+      jsonObject[search].user = formattedUser;
       jsonObject[search].updated_at = date;
     } else {
       jsonObject.push({
         id: userID,
         token: token,
         tokenSecret: tokenSecret,
-        name: name,
-        screen_name: screenName,
+        user: formattedUser,
         created_at: date
       });
     }
@@ -40,8 +40,7 @@ async function tokens (userID, token, tokenSecret, name, screenName) {
       id: userID,
       token: token,
       tokenSecret: tokenSecret,
-      name: name,
-      screen_name: screenName,
+      user: formattedUser,
       created_at: date
     });
   }
@@ -130,7 +129,7 @@ function keywords (userID, keywords) {
     } else {
       jsonObject.push({
         id: userID,
-        accounts,
+        accounts: accounts,
       });
     }
   } else {
@@ -138,7 +137,7 @@ function keywords (userID, keywords) {
     console.log('settings.json file does not exist');
     jsonObject.push({
       id: userID,
-      accounts,
+      accounts: accounts,
     });
     console.log(jsonObject);
   }

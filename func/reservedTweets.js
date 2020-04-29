@@ -18,7 +18,6 @@ function create(userID, tweetObj){
   let jsonObject= [];
   if(fs.existsSync(filename)){
     jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
-    console.log(jsonObject);
     if(jsonObject.length === 0){
       // 新しく作成
       tweetObj["id"] = 1;
@@ -34,6 +33,7 @@ function create(userID, tweetObj){
   }
   jsonObject.push(tweetObj);
   saveToFile(filename, jsonObject);
+  return jsonObject;
 }
 
 function deleteObj (userID, objID){
@@ -43,8 +43,8 @@ function deleteObj (userID, objID){
     let result = jsonObject.filter(function(item) {
       return item.id != objID;
     });
-    console.log(result);
     saveToFile(filename, result);
+    return result;
   }
   else {
     console.log('json file does not exist');
