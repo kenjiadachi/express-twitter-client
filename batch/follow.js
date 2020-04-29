@@ -4,7 +4,7 @@ const twitter = require('../func/twitter');
 const saveToLogs = require('../func/saveToLogs');
 const COUNT = 3;
 
-follow();
+// follow();
 
 async function follow(){
   const filename = path.join( __dirname, '../data/', 'settings.json');
