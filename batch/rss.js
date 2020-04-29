@@ -1,6 +1,7 @@
 var parser = require('xml2json');
 var fs = require('fs');
 const path = require('path');
+const diff = require('../func/diff');
 
 rss();
 
@@ -19,9 +20,22 @@ async function rss(){
   for (jsonFile of fileList){
     let result = [];
     let rssObject = JSON.parse(fs.readFileSync(path.join( __dirname, '../data/rss',jsonFile), 'utf8'));
+    let logsFileName = path.join( __dirname, '../logs/rss-logs/',jsonFile);
     // console.log(rssObject);
     for(xmlfile of rssObject) {
       let json = {}
+      let existing_items = [];
+      if(fs.existsSync(logsFileName)){
+        logsObject = JSON.parse(fs.readFileSync(logsFileName), 'utf8');
+        result = logsObject;
+        for(item of logsObject){
+          if(item.url === xmlfile.url){
+            existing_items = item.content.rss.channel.item;
+            // console.log(existing_items);
+          }
+        }
+      }
+
       // console.log(xmlfile.url);
       await axios.get(xmlfile.url)
       .then(response => {
@@ -29,12 +43,15 @@ async function rss(){
         let options = {};
         options.object = true
         json = parser.toJson(response.data, options);
-        console.log(json);
-
+        thisItems = json.rss.channel.item;
+        console.log(thisItems);
+        newItems = diff.ObjectArrays(thisItems, existing_items,"link").onlyObjArr1;
+        console.log(newItems);
         let resultObj = {
           "url" : xmlfile.url,
           "created_at" : date,
-          "content" : json
+          "content" : json,
+          "newItems" : newItems
         }
         result.push(resultObj);
       }).catch(err => {
@@ -46,14 +63,44 @@ async function rss(){
       // console.log("to json -> %s", json);
 
     }
-    saveToJson(path.join( __dirname, '../logs/rss-logs/', jsonFile), result);
+    saveToJson(logsFileName, result);
   }
 
 }
 
-function readXML(url){
 
-}
+// 差分をとる
+// function ObjectArrays (objArr1, objArr2) {
+//   const result = {};
+//   result.common = [];
+//
+//   result.onlyObjArr1 = [];
+//   result.onlyObjArr2 = [];
+//
+//   objArr1.filter((item1) => {
+//     const same = objArr2.filter(
+//       (item2) => item1.link === item2.link,
+//     );
+//
+//     for (var key in same) {
+//       const varkey = same[key];
+//       result.common.push(varkey);
+//     }
+//   });
+//
+//
+//   result.onlyObjArr1 = difference(objArr1, result.common);
+//   result.onlyObjArr2 = difference(objArr2, result.common);
+//
+//   // return [common,only_json1,only_json2];
+//   return result;
+// }
+//
+//
+// function difference(array, common) {
+//   const itemIds = common.map((item) => item.link);
+//   return array.filter((item) => itemIds.indexOf(item.link) === -1);
+// }
 
 // 書き出し用の関数
 function saveToJson(filename, object) {
