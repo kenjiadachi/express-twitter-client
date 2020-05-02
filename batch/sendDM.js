@@ -5,6 +5,8 @@ const twitter = require('../func/twitter');
 const saveToLogs = require('../func/saveToLogs');
 const COUNT = 3;
 
+sendDM();
+
 async function sendDM(){
   const filename = path.join( __dirname, '../data/', 'settings.json');
   if(fs.existsSync(filename)){
@@ -76,8 +78,9 @@ async function sendDM(){
 
           // minFollowerが設定されていれば、それに満たないfollowersCountの人を除く
           if (Object.keys(item).indexOf('minFollower') !== -1) {
-            filterByMinFollower(unfollowingUsers, item.minFollower);
+            unfollowingUsers = unfollowingUsers.filter(it => it.followersCount >= item.minFollower);
           }
+          console.log(unfollowingUsers);
 
           // APIを叩く
           for (var obj of unfollowingUsers) {
@@ -98,7 +101,7 @@ async function sendDM(){
               await client.post('direct_messages/events/new', options)
               .then((res) => {
                 console.log("DMしました！");
-                saveToLogs.sendDM (item.id, obj.keyword || null, obj.account || null, res);
+                saveToLogs.dm (item.id, obj.keyword, item.message, res);
               });
             } catch (err) {
               console.log(err);
@@ -114,17 +117,6 @@ async function sendDM(){
 
 // IE11でも使える（Babel + polyfill 未使用）
 function filterUniqueItemsByUserID (array) {
-  // idを集約した配列を作成
-  const itemIds = array.map(function(item) {
-    return item.userID;
-  });
-  // 
-  return array.filter(function(item, index) {
-    return itemIds.indexOf(item.userID) === index;
-  });
-}
-
-function filterByMinFollower (array, minFollower) {
   // idを集約した配列を作成
   const itemIds = array.map(function(item) {
     return item.userID;
