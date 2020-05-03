@@ -2,7 +2,8 @@ var fs = require('fs');
 const path = require('path');
 const format = require('./format');
 const now = new Date();
-const date = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2) + " " + ("0" + now.getHours()).slice(-2) + ":" + ("0" + now.getMinutes()).slice(-2) + ":" + ("0" + now.getSeconds()).slice(-2);
+const date = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2);
+const datetime = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2) + " " + ("0" + now.getHours()).slice(-2) + ":" + ("0" + now.getMinutes()).slice(-2) + ":" + ("0" + now.getSeconds()).slice(-2);
 
 function follow (userID, keyword, accountID, user) {
   let jsonfile = path.join( __dirname, '../logs/follow-logs/', userID + '.json');
@@ -12,7 +13,7 @@ function follow (userID, keyword, accountID, user) {
     jsonObject = JSON.parse(fs.readFileSync(jsonfile, 'utf8'));
   }
   let tmpObj = {
-    created_at: date,
+    created_at: datetime,
     keyword: keyword,
     account_id: accountID,
     user: format.user(user)
@@ -30,7 +31,7 @@ function like (userID, keyword, accountID, tweet) {
   }
 
   let tmpObj = {
-    created_at: date,
+    created_at: datetime,
     keyword: keyword,
     account_id: accountID,
     tweet: format.tweet(tweet)
@@ -48,7 +49,7 @@ function dm (userID, keyword, message, user) {
   }
 
   let tmpObj = {
-    created_at: date,
+    created_at: datetime,
     keyword: keyword,
     message: message,
     user: format.user(user)
@@ -65,7 +66,7 @@ function unfollow (userID, user, reason) {
     jsonObject = JSON.parse(fs.readFileSync(jsonfile, 'utf8'));
   }
   let tmpObj = {
-    created_at: date,
+    created_at: datetime,
     reason: reason,
     user: format.user(user)
   };
@@ -74,19 +75,15 @@ function unfollow (userID, user, reason) {
 }
 
 
-function follower_likes(userID, tweetObj) {
+function followerLikes(userID, tweetObj) {
   let jsonfile = path.join( __dirname, '../logs/follower-likes/', userID + '.json');
   let jsonObject = {};
   if(fs.existsSync(jsonfile)){
     //jsonFileがあれば新しいオブジェクト をpush
     jsonObject = JSON.parse(fs.readFileSync(jsonfile, 'utf8'));
   }
-
-  const now = new Date();
-  const date = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2);
-
-   jsonObject[date] = tweetObj;
-   saveToLogs(jsonfile,jsonObject);
+  jsonObject[date] = tweetObj;
+  saveToLogs(jsonfile,jsonObject);
 }
 
 
