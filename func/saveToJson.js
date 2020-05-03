@@ -3,15 +3,13 @@ const fs = require('fs');
 
 const settings = path.join(__dirname, '../data/settings.json');
 const ffs = require('./ffs');
-const format = require('./format');
 
 
 // token, tokenSecretを保存する
-async function tokens (userID, token, tokenSecret, userObj) {
+async function tokens (userID, token, tokenSecret) {
   let jsonObject = [];
   const now = new Date();
   const date = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2) + " " + ("0" + now.getHours()).slice(-2) + ":" + ("0" + now.getMinutes()).slice(-2) + ":" + ("0" + now.getSeconds()).slice(-2);
-  const formattedUser = format.user(userObj);
 
   if (fs.existsSync(settings)) {
     console.log('settings.json file exists.');
@@ -22,14 +20,12 @@ async function tokens (userID, token, tokenSecret, userObj) {
     if (search != -1) {
       jsonObject[search].token = token;
       jsonObject[search].tokenSecret = tokenSecret;
-      jsonObject[search].user = formattedUser;
       jsonObject[search].updated_at = date;
     } else {
       jsonObject.push({
         id: userID,
         token: token,
         tokenSecret: tokenSecret,
-        user: formattedUser,
         created_at: date
       });
     }
@@ -40,7 +36,6 @@ async function tokens (userID, token, tokenSecret, userObj) {
       id: userID,
       token: token,
       tokenSecret: tokenSecret,
-      user: formattedUser,
       created_at: date
     });
   }

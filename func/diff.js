@@ -44,7 +44,7 @@ function OnlyObject1 (objArr1, keyType1, objArr2, keyType2) {
       common.push(varkey);
     }
   });
-  result = difference(objArr1, common, keyType1);
+  const result = difference(objArr1, common, keyType1);
   return result;
 }
 

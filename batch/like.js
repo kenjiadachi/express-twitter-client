@@ -4,7 +4,7 @@ const twitter = require('../func/twitter');
 const saveToLogs = require('../func/saveToLogs');
 const COUNT = 3;
 
-like();
+// like();
 
 async function like(){
   const filename = path.join( __dirname, '../data/', 'settings.json');
@@ -107,7 +107,6 @@ async function like(){
           }
         }
         // ここでListに対してAPI叩く
-        // console.log(forAPIlist);
         const uniqueList = filterUniqueItemsByTweetID(forAPIlist);
         console.log(uniqueList);
         let jsonfile = path.join( __dirname, '../data/ffs/', item.id + '.json');

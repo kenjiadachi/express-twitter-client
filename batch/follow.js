@@ -2,9 +2,10 @@ var fs = require('fs');
 const path = require('path');
 const twitter = require('../func/twitter');
 const saveToLogs = require('../func/saveToLogs');
+const diff = require('../func/diff');
 const COUNT = 3;
 
-follow();
+// follow();
 
 async function follow(){
   const filename = path.join( __dirname, '../data/', 'settings.json');
@@ -113,7 +114,7 @@ async function follow(){
           // 最新のフォロワーに含まれていないようにする
           let ffsObject = JSON.parse(fs.readFileSync(jsonfile, 'utf8'));
           let latest_follows = (Object.values(ffsObject)).slice(-1)[0].follows;
-          let unfollowingUsers = getUnfollowingUsers(uniqueList, latest_follows);
+          let unfollowingUsers = diff.OnlyObject1(uniqueList, "userID", latest_follows, "id_str");
           console.log(unfollowingUsers);
           // APIを叩く
           for (var obj of unfollowingUsers) {
@@ -149,37 +150,6 @@ function filterUniqueItemsByUserID (array) {
     return itemIds.indexOf(item.userID) === index;
   });
 }
-
-
-// 差分をとる
-function getUnfollowingUsers (objArr1, objArr2) {
-  const result = {};
-  result.common = [];
-
-  result.onlyObjArr1 = [];
-  result.onlyObjArr2 = [];
-
-  objArr1.filter((item1) => {
-    const same = objArr2.filter(
-      (item2) => item1.userID === item2.id_str,
-    );
-
-    for (var key in same) {
-      const varkey = same[key];
-      result.common.push(varkey);
-    }
-  });
-
-  result.onlyObjArr1 = difference(objArr1, result.common);
-  return result.onlyObjArr1;
-}
-
-
-function difference(array, common) {
-  const itemIds = common.map((item) => item.id_str);
-  return array.filter((item) => itemIds.indexOf(item.userID) === -1);
-}
-
 
 module.exports = {
   follow: follow,

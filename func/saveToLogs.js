@@ -12,13 +12,13 @@ function follow (userID, keyword, accountID, user) {
     jsonObject = JSON.parse(fs.readFileSync(jsonfile, 'utf8'));
   }
   let tmpObj = {
-      created_at: date,
-      keyword: keyword,
-      account_id: accountID,
-      user: format.user(user)
+    created_at: date,
+    keyword: keyword,
+    account_id: accountID,
+    user: format.user(user)
   };
   jsonObject.push(tmpObj);
-  saveToLogs(jsonfile,jsonObject);
+  saveToLogs(jsonfile, jsonObject);
 }
 
 function like (userID, keyword, accountID, tweet) {
@@ -30,13 +30,13 @@ function like (userID, keyword, accountID, tweet) {
   }
 
   let tmpObj = {
-      created_at: date,
-      keyword: keyword,
-      account_id: accountID,
-      tweet: format.tweet(tweet)
+    created_at: date,
+    keyword: keyword,
+    account_id: accountID,
+    tweet: format.tweet(tweet)
   };
   jsonObject.push(tmpObj);
-  saveToLogs(jsonfile,jsonObject);
+  saveToLogs(jsonfile, jsonObject);
 }
 
 function dm (userID, keyword, message, user) {
@@ -48,13 +48,13 @@ function dm (userID, keyword, message, user) {
   }
 
   let tmpObj = {
-      created_at: date,
-      keyword: keyword,
-      message: message,
-      user: format.user(user)
+    created_at: date,
+    keyword: keyword,
+    message: message,
+    user: format.user(user)
   };
   jsonObject.push(tmpObj);
-  saveToLogs(jsonfile,jsonObject);
+  saveToLogs(jsonfile, jsonObject);
 }
 
 function unfollow (userID, user, reason) {
@@ -65,12 +65,12 @@ function unfollow (userID, user, reason) {
     jsonObject = JSON.parse(fs.readFileSync(jsonfile, 'utf8'));
   }
   let tmpObj = {
-      created_at: date,
-      reason: reason,
-      user: format.user(user)
+    created_at: date,
+    reason: reason,
+    user: format.user(user)
   };
   jsonObject.push(tmpObj);
-  saveToLogs(jsonfile,jsonObject);
+  saveToLogs(jsonfile, jsonObject);
 }
 
 
