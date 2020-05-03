@@ -108,4 +108,5 @@ module.exports = {
   like: like,
   dm: dm,
   unfollow: unfollow,
+  followerLikes: followerLikes
 };
