@@ -6,7 +6,7 @@ const diff = require('../func/diff');
 const saveToLogs = require('../func/saveToLogs');
 const COUNT = 3;
 
-sendDM();
+// sendDM();
 
 async function sendDM(){
   const filename = path.join( __dirname, '../data/', 'settings.json');

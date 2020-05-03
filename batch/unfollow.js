@@ -6,7 +6,7 @@ const twitter = require('../func/twitter');
 const saveToLogs = require('../func/saveToLogs');
 const filename = path.join( __dirname, '../data/', 'settings.json');
 
-unfollow();
+// unfollow();
 
 async function unfollow(){
   if(fs.existsSync(filename)){

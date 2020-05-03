@@ -16,15 +16,18 @@ async function rss(){
 
   for (var jsonFile of fileList){
     let result = [];
-    let rssObject = JSON.parse(fs.readFileSync(path.join( __dirname, '../data/rss',jsonFile), 'utf8'));
-    let logsFileName = path.join( __dirname, '../logs/rss-logs/',jsonFile);
-    // console.log(rssObject);
+    let rssObject = JSON.parse(fs.readFileSync(path.join( __dirname, '../data/rss', jsonFile), 'utf8'));
+    let logsFileName = path.join( __dirname, '../logs/rss-logs/', jsonFile);
     for(var xmlfile of rssObject) {
       let json = {};
       let existing_items = [];
+
+      // rss-logs内に自分のファイルが存在すれば
       if(fs.existsSync(logsFileName)){
         var logsObject = JSON.parse(fs.readFileSync(logsFileName), 'utf8');
+
         result = logsObject;
+
         for(var item of logsObject){
           if(item.url === xmlfile.url){
             existing_items = item.content.rss.channel.item;
@@ -41,7 +44,7 @@ async function rss(){
         options.object = true;
         json = parser.toJson(response.data, options);
         var thisItems = json.rss.channel.item;
-        var newItems = diff.ObjectArrays(thisItems, existing_items,"link").onlyObjArr1;
+        var newItems = diff.ObjectArrays(thisItems, existing_items, "link").onlyObjArr1;
         let resultObj = {
           url: xmlfile.url,
           created_at: date,

@@ -40,14 +40,14 @@ async function createFavList(){
 
             // APIを叩く
             try {
+              await sleep.sleep(15000);
               await client.get('favorites/list', options)
               .then((res) => {
                 for(var tweet of res){
                   logObj.likes.push(format.tweet(tweet));
                 }
-                forLogs.push(logObj);   
+                forLogs.push(logObj);
               });
-              await sleep.sleep(12000);
             } catch (err) {
               console.log(err);
             }
