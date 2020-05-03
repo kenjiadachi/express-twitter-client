@@ -107,7 +107,6 @@ async function like(){
           }
         }
         // ここでListに対してAPI叩く
-        // console.log(forAPIlist);
         const uniqueList = filterUniqueItemsByTweetID(forAPIlist);
         console.log(uniqueList);
         let jsonfile = path.join( __dirname, '../data/ffs/', item.id + '.json');

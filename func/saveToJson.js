@@ -3,7 +3,6 @@ const fs = require('fs');
 
 const settings = path.join(__dirname, '../data/settings.json');
 const ffs = require('./ffs');
-const format = require('./format');
 
 
 // token, tokenSecretを保存する

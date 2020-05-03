@@ -15,13 +15,13 @@ function follow (userID, keyword, accountID, user) {
     // fileがなければ新しく作る
   }
   let tmpObj = {
-      created_at: date,
-      keyword: keyword,
-      account_id: accountID,
-      user: format.user(user)
+    created_at: date,
+    keyword: keyword,
+    account_id: accountID,
+    user: format.user(user)
   };
   jsonObject.push(tmpObj);
-  saveToLogs(jsonfile,jsonObject);
+  saveToLogs(jsonfile, jsonObject);
 }
 
 function like (userID, keyword, accountID, tweet) {
@@ -35,13 +35,13 @@ function like (userID, keyword, accountID, tweet) {
     // fileがなければ新しく作る
   }
   let tmpObj = {
-      created_at: date,
-      keyword: keyword,
-      account_id: accountID,
-      tweet: format.tweet(tweet)
+    created_at: date,
+    keyword: keyword,
+    account_id: accountID,
+    tweet: format.tweet(tweet)
   };
   jsonObject.push(tmpObj);
-  saveToLogs(jsonfile,jsonObject);
+  saveToLogs(jsonfile, jsonObject);
 }
 
 function dm (userID, keyword, message, user) {
@@ -55,13 +55,13 @@ function dm (userID, keyword, message, user) {
     // fileがなければ新しく作る
   }
   let tmpObj = {
-      created_at: date,
-      keyword: keyword,
-      message: message,
-      user: format.user(user)
+    created_at: date,
+    keyword: keyword,
+    message: message,
+    user: format.user(user)
   };
   jsonObject.push(tmpObj);
-  saveToLogs(jsonfile,jsonObject);
+  saveToLogs(jsonfile, jsonObject);
 }
 
 function unfollow (userID, user) {
@@ -75,11 +75,11 @@ function unfollow (userID, user) {
     // fileがなければ新しく作る
   }
   let tmpObj = {
-      created_at: date,
-      user: format.user(user)
+    created_at: date,
+    user: format.user(user)
   };
   jsonObject.push(tmpObj);
-  saveToLogs(jsonfile,jsonObject);
+  saveToLogs(jsonfile, jsonObject);
 }
 
 

@@ -1,4 +1,5 @@
 const Twitter = require('twitter');
+const Twit = require('twit');
 const path = require('path');
 const fs = require('fs');
 const config = require('../config');
@@ -37,7 +38,41 @@ function initWithToken(token, tokenSecret) {
   return client;
 }
 
+function initByTwit(userID) {
+  let jsonObject = {};
+  try {
+    jsonObject = JSON.parse(fs.readFileSync(settings, 'utf8'));
+  } catch (err) {
+    console.log(`エラーが発生しました。${err}`);
+    throw err;
+  }
+
+  const search = jsonObject.findIndex((v) => v.id === userID);
+
+  const client = new Twit({
+    consumer_key: config.consumerKey,
+    consumer_secret: config.consumerSecret,
+    access_token: jsonObject[search].token,
+    access_token_secret: jsonObject[search].tokenSecret,
+  });
+
+  return client;
+}
+
+function initByTwitWithToken(token, tokenSecret) {
+  const client = new Twit({
+    consumer_key: config.consumerKey,
+    consumer_secret: config.consumerSecret,
+    access_token: token,
+    access_token_secret: tokenSecret,
+  });
+
+  return client;
+}
+
 module.exports = {
   init,
   initWithToken,
+  initByTwit,
+  initByTwitWithToken
 };

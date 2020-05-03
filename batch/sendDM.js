@@ -2,6 +2,7 @@
 var fs = require('fs');
 const path = require('path');
 const twitter = require('../func/twitter');
+const diff = require('../func/diff');
 const saveToLogs = require('../func/saveToLogs');
 const COUNT = 3;
 
@@ -73,14 +74,14 @@ async function sendDM(){
           // 最新のフォロワーに含まれていないようにする
           let ffsObject = JSON.parse(fs.readFileSync(jsonfile, 'utf8'));
           let latest_follows = (Object.values(ffsObject)).slice(-1)[0].follows;
-          let unfollowingUsers = getUnfollowingUsers(uniqueList, latest_follows);
-          console.log(unfollowingUsers);
+          let unfollowingUsers = diff.OnlyObject1(uniqueList, "userID", latest_follows, "id_str");
 
           // minFollowerが設定されていれば、それに満たないfollowersCountの人を除く
           if (Object.keys(item).indexOf('minFollower') !== -1) {
             unfollowingUsers = unfollowingUsers.filter(it => it.followersCount >= item.minFollower);
           }
-          console.log(unfollowingUsers);
+
+          let client2 = twitter.initByTwitWithToken(item.token, item.tokenSecret);
 
           // APIを叩く
           for (var obj of unfollowingUsers) {
@@ -98,7 +99,7 @@ async function sendDM(){
               }
             };
             try {
-              await client.post('direct_messages/events/new', options)
+              await client2.post('direct_messages/events/new', options)
               .then((res) => {
                 console.log("DMしました！");
                 saveToLogs.dm (item.id, obj.keyword, item.message, res);
@@ -125,35 +126,6 @@ function filterUniqueItemsByUserID (array) {
   return array.filter(function(item, index) {
     return itemIds.indexOf(item.userID) === index;
   });
-}
-
-// 差分をとる
-function getUnfollowingUsers (objArr1, objArr2) {
-  const result = {};
-  result.common = [];
-
-  result.onlyObjArr1 = [];
-  result.onlyObjArr2 = [];
-
-  objArr1.filter((item1) => {
-    const same = objArr2.filter(
-      (item2) => item1.userID === item2.id_str,
-    );
-
-    for (var key in same) {
-      const varkey = same[key];
-      result.common.push(varkey);
-    }
-  });
-
-  result.onlyObjArr1 = difference(objArr1, result.common);
-  return result.onlyObjArr1;
-}
-
-
-function difference(array, common) {
-  const itemIds = common.map((item) => item.id_str);
-  return array.filter((item) => itemIds.indexOf(item.userID) === -1);
 }
 
 module.exports = {
