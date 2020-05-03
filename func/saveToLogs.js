@@ -11,9 +11,6 @@ function follow (userID, keyword, accountID, user) {
     //jsonFileがあれば新しいオブジェクト をpush
     jsonObject = JSON.parse(fs.readFileSync(jsonfile, 'utf8'));
   }
-  else{
-    // fileがなければ新しく作る
-  }
   let tmpObj = {
       created_at: date,
       keyword: keyword,
@@ -31,9 +28,7 @@ function like (userID, keyword, accountID, tweet) {
     //jsonFileがあれば新しいオブジェクト をpush
     jsonObject = JSON.parse(fs.readFileSync(jsonfile, 'utf8'));
   }
-  else{
-    // fileがなければ新しく作る
-  }
+
   let tmpObj = {
       created_at: date,
       keyword: keyword,
@@ -51,9 +46,7 @@ function dm (userID, keyword, message, user) {
     //jsonFileがあれば新しいオブジェクト をpush
     jsonObject = JSON.parse(fs.readFileSync(jsonfile, 'utf8'));
   }
-  else{
-    // fileがなければ新しく作る
-  }
+
   let tmpObj = {
       created_at: date,
       keyword: keyword,
@@ -64,22 +57,36 @@ function dm (userID, keyword, message, user) {
   saveToLogs(jsonfile,jsonObject);
 }
 
-function unfollow (userID, user) {
+function unfollow (userID, user, reason) {
   let jsonfile = path.join( __dirname, '../logs/unfollow-logs/', userID + '.json');
   let jsonObject = [];
   if(fs.existsSync(jsonfile)){
     //jsonFileがあれば新しいオブジェクト をpush
     jsonObject = JSON.parse(fs.readFileSync(jsonfile, 'utf8'));
   }
-  else{
-    // fileがなければ新しく作る
-  }
   let tmpObj = {
       created_at: date,
+      reason: reason,
       user: format.user(user)
   };
   jsonObject.push(tmpObj);
   saveToLogs(jsonfile,jsonObject);
+}
+
+
+function follower_likes(userID, tweetObj) {
+  let jsonfile = path.join( __dirname, '../logs/follower-likes/', userID + '.json');
+  let jsonObject = {};
+  if(fs.existsSync(jsonfile)){
+    //jsonFileがあれば新しいオブジェクト をpush
+    jsonObject = JSON.parse(fs.readFileSync(jsonfile, 'utf8'));
+  }
+
+  const now = new Date();
+  const date = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2);
+
+   jsonObject[date] = tweetObj;
+   saveToLogs(jsonfile,jsonObject);
 }
 
 
