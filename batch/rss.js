@@ -10,9 +10,9 @@ const filename = path.join( __dirname, '../data/', 'settings.json');
 const now = new Date();
 const date = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2) + " " + ("0" + now.getHours()).slice(-2) + ":" + ("0" + now.getMinutes()).slice(-2) + ":" + ("0" + now.getSeconds()).slice(-2);
 
-rss();
+// main();
 
-async function rss(){
+async function main(){
   let filepath = path.join( __dirname, '../data/rss');
   let fileList = [];
   fileList = fs.readdirSync(filepath);
@@ -48,52 +48,53 @@ async function rss(){
             }
           }
 
-          //diff_seec
+          // diff_sec
           let latest_created = false;
           let diff_sec;
-          for(item of result){
+          for(let item of result){
             if(item.url === xmlfile.url){
-              tmp = new Date(Date.parse(item.created_at));
+              let tmp = new Date(Date.parse(item.created_at));
               if(latest_created < tmp || latest_created == false){
                 latest_created  = tmp;
               }
-              console.log(latest_created);
             }
           }
           if(latest_created != false){
             diff_sec = (latest_created.getTime() - now.getTime())/1000;
-            console.log(diff_sec);
           }
 
-          // console.log(xmlfile.url);
-          await axios.get(xmlfile.url)
-          .then(response => {
-            // console.log(response.data);
-            let options = {};
-            options.object = true;
-            json = parser.toJson(response.data, options);
-            var thisItems = json.rss.channel.item;
-            var newItems = diff.ObjectArrays(thisItems, existing_items, "link").onlyObjArr1;
+          // diff_secがundifinedまたはupdate_frequencyがないまたは定義した秒数たっていれば
+          if(typeof diff_sec === "undefined" || Object.keys(rssObject).indexOf('update_frequency') == -1 || diff_sec >= rssObject.update_frequency) {
 
-            let resultObj = {
-              url: xmlfile.url,
-              created_at: date,
-              content: json,
-              newItems: newItems
-            };
-            newObj.push(resultObj);
-          }).catch(err => {
-            console.log('err:', err);
-          });
+            // console.log(xmlfile.url);
+            await axios.get(xmlfile.url)
+            .then(response => {
+              // console.log(response.data);
+              let options = {};
+              options.object = true;
+              json = parser.toJson(response.data, options);
+              var thisItems = json.rss.channel.item;
+              var newItems = diff.ObjectArrays(thisItems, existing_items, "link").onlyObjArr1;
+
+              let resultObj = {
+                url: xmlfile.url,
+                created_at: date,
+                content: json,
+                newItems: newItems
+              };
+              newObj.push(resultObj);
+            }).catch(err => {
+              console.log('err:', err);
+            });
+          }
         }
 
         // newItemそれぞれに対してAPIを叩く
         for(let obj of newObj){
-          console.log(count_todaysTweet(result,newObj));
           for(let item of obj.newItems){
 
             // もし、投稿すべき内容であれば
-            if (true) {
+            if (Object.keys(rssObject).indexOf('max_tweet_of_update') == -1 ||todaysTweetCount(result,newObj) < rssObject.max_tweet_of_update) {
               let options = {};
               options.status = item.title + "\n" +item.link;
               // APIを叩く
@@ -118,17 +119,14 @@ async function rss(){
   }
 }
 
-function count_todaysTweet(resultObj, newObj){
-  // const today = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2);
+function todaysTweetCount(resultObj, newObj){
   let resultTweet = 0;
-  // console.log(newObj);
-  for(item of resultObj){
-    createdDate = item.created_at;
-    createdDate = new Date(Date.parse(createdDate));
+  for(let item of resultObj){
+    let createdDate = new Date(Date.parse(item.created_at));
     if(now.getFullYear() == createdDate.getFullYear()){
       if(now.getMonth() == createdDate.getMonth()){
         if(now.getDate() == createdDate.getDate()){
-          for(newitem of item.newItems){
+          for(let newitem of item.newItems){
             if(Object.keys(newitem).indexOf('tweet') !== -1){
                 resultTweet += 1;
             }
@@ -137,14 +135,14 @@ function count_todaysTweet(resultObj, newObj){
       }
     }
   }
-  for(item of newObj){
-    for(newitem of item.newItems){
+  for(let item of newObj){
+    for(let newitem of item.newItems){
       if(Object.keys(newitem).indexOf('tweet') !== -1){
           resultTweet += 1;
       }
     }
   }
-  return resultTweet
+  return resultTweet;
 }
 
 
@@ -164,5 +162,5 @@ function saveToJson(filename, object) {
 }
 
 module.exports = {
-  rss: rss,
+  main: main,
 };
