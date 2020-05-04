@@ -28,7 +28,7 @@ async function rss(){
 
         let result = [];
         let newObj = [];
-        
+
         let rssObject = JSON.parse(fs.readFileSync(path.join( __dirname, '../data/rss', jsonFile), 'utf8'));
         let logsFileName = path.join( __dirname, '../logs/rss-logs/', jsonFile);
         for(var xmlfile of rssObject) {
@@ -39,13 +39,30 @@ async function rss(){
           if(fs.existsSync(logsFileName)){
             var logsObject = JSON.parse(fs.readFileSync(logsFileName), 'utf8');
             result = logsObject;
-            
+
 
             for(let item of logsObject){
               if(item.url === xmlfile.url){
                 existing_items = existing_items.concat(item.content.rss.channel.item);
               }
             }
+          }
+
+          //diff_seec
+          let latest_created = false;
+          let diff_sec;
+          for(item of result){
+            if(item.url === xmlfile.url){
+              tmp = new Date(Date.parse(item.created_at));
+              if(latest_created < tmp || latest_created == false){
+                latest_created  = tmp;
+              }
+              console.log(latest_created);
+            }
+          }
+          if(latest_created != false){
+            diff_sec = (latest_created.getTime() - now.getTime())/1000;
+            console.log(diff_sec);
           }
 
           // console.log(xmlfile.url);
@@ -72,8 +89,9 @@ async function rss(){
 
         // newItemそれぞれに対してAPIを叩く
         for(let obj of newObj){
+          console.log(count_todaysTweet(result,newObj));
           for(let item of obj.newItems){
-          
+
             // もし、投稿すべき内容であれば
             if (true) {
               let options = {};
@@ -92,12 +110,43 @@ async function rss(){
           }
         }
 
+        // console.log(result);
+
         saveToJson(logsFileName, result.concat(newObj));
       }
     }
   }
-
 }
+
+function count_todaysTweet(resultObj, newObj){
+  // const today = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2);
+  let resultTweet = 0;
+  // console.log(newObj);
+  for(item of resultObj){
+    createdDate = item.created_at;
+    createdDate = new Date(Date.parse(createdDate));
+    if(now.getFullYear() == createdDate.getFullYear()){
+      if(now.getMonth() == createdDate.getMonth()){
+        if(now.getDate() == createdDate.getDate()){
+          for(newitem of item.newItems){
+            if(Object.keys(newitem).indexOf('tweet') !== -1){
+                resultTweet += 1;
+            }
+          }
+        }
+      }
+    }
+  }
+  for(item of newObj){
+    for(newitem of item.newItems){
+      if(Object.keys(newitem).indexOf('tweet') !== -1){
+          resultTweet += 1;
+      }
+    }
+  }
+  return resultTweet
+}
+
 
 // 書き出し用の関数
 function saveToJson(filename, object) {
