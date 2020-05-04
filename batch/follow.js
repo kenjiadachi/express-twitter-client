@@ -7,7 +7,7 @@ const COUNT = 3;
 
 // follow();
 
-async function follow(){
+async function main(){
   const filename = path.join( __dirname, '../data/', 'settings.json');
   if(fs.existsSync(filename)){
     const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
@@ -152,5 +152,5 @@ function filterUniqueItemsByUserID (array) {
 }
 
 module.exports = {
-  follow: follow,
+  main: main,
 };

@@ -8,7 +8,7 @@ const filename = path.join( __dirname, '../data/', 'settings.json');
 
 // unfollow();
 
-async function unfollow(){
+async function main(){
   if(fs.existsSync(filename)){
     const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
     for(var item of jsonObject){
@@ -29,7 +29,7 @@ async function unfollow(){
             forAPIlist.push(tmpObj);
           }
         }
-        
+
         // いいねしてくれてない人をアンフォロー
         const today = new Date();
         let followerListFile = path.join( __dirname, '../logs/follower-likes/', item.id + '.json');
@@ -124,5 +124,5 @@ async function unfollow(){
 
 
 module.exports = {
-  unfollow: unfollow,
+  main: main,
 };

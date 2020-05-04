@@ -4,9 +4,9 @@ const twitter = require('../func/twitter');
 const saveToLogs = require('../func/saveToLogs');
 const COUNT = 3;
 
-// like();
+main();
 
-async function like(){
+async function main(){
   const filename = path.join( __dirname, '../data/', 'settings.json');
   if(fs.existsSync(filename)){
     const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
@@ -147,5 +147,5 @@ function filterUniqueItemsByTweetID (array) {
 }
 
 module.exports = {
-  like: like,
+  main: main,
 };

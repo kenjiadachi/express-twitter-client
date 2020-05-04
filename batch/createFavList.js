@@ -10,7 +10,7 @@ const COUNT = 10;
 
 // createFavList();
 
-async function createFavList(){
+async function main(){
   const filename = path.join( __dirname, '../data/', 'settings.json');
   if(fs.existsSync(filename)){
     const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
@@ -62,5 +62,5 @@ async function createFavList(){
 }
 
 module.exports = {
-  createFavList: createFavList,
+  main: main,
 };

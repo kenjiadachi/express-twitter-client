@@ -18,11 +18,9 @@ async function rss(){
   fileList = fs.readdirSync(filepath);
   const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
   for (var jsonFile of fileList){
-    console.log(fileList);
     // もし、settings.jsonのなかに、jsonFileの名前がIDとして存在すれば
     if (jsonObject.findIndex((v) => v.id === jsonFile.split('.')[0]) != -1) {
       const settingData = jsonObject.find((v) => v.id === jsonFile.split('.')[0]);
-      console.log(settingData);
       // そのオブジェクトの中に、token, tokenSecertが存在すれば
       if (Object.keys(settingData).indexOf('token') !== -1 && Object.keys(settingData).indexOf('tokenSecret') !== -1) {
 

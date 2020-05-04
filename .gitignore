@@ -6,6 +6,8 @@ data/*
 
 logs/*
 
+uploads/*
+
 .vscode
 
 .DS_Store

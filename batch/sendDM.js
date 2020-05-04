@@ -8,7 +8,7 @@ const COUNT = 3;
 
 // sendDM();
 
-async function sendDM(){
+async function main(){
   const filename = path.join( __dirname, '../data/', 'settings.json');
   if(fs.existsSync(filename)){
     const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
@@ -129,5 +129,5 @@ function filterUniqueItemsByUserID (array) {
 }
 
 module.exports = {
-  sendDM: sendDM,
+  main: main,
 };
