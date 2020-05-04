@@ -6,16 +6,16 @@ const twitter = require('../func/twitter');
 // const saveToLogs = require('../func/saveToLogs');
 const filename = path.join( __dirname, '../data/', 'settings.json');
 
-let reservedTweet = {};
-reservedTweet.media = [path.join( __dirname, '../uploads/', '1.png'), path.join( __dirname, '../uploads/', '2.png')];
-reservedTweet.text = "やっぱり三浦大知はよき。何回でも見てまう。\nhttps://youtu.be/Q1VkAyhqgMM ";
-// reservedTweet.text = "やっぱり三浦大知はよき。何回でも見てまう。";
-reservedTweet.isPublished = false;
+// let reservedTweet = {};
+// reservedTweet.media = [path.join( __dirname, '../uploads/', '1.png'), path.join( __dirname, '../uploads/', '2.png')];
+// reservedTweet.text = "やっぱり三浦大知はよき。何回でも見てまう。\nhttps://youtu.be/Q1VkAyhqgMM ";
+// // reservedTweet.text = "やっぱり三浦大知はよき。何回でも見てまう。";
+// reservedTweet.isPublished = false;
 
-const userID = "749128445167214593";
+// const userID = "749128445167214593";
 
 
-main(reservedTweet, userID);
+// main(reservedTweet, userID);
 
 
 
