@@ -1,5 +1,6 @@
-var fs = require('fs');
+const fs = require('fs');
 const path = require('path');
+const s3 = require('./s3');
 
 function get(userID) {
   const filename = path.join( __dirname, '../data/reserved-tweets/', userID + '.json');
@@ -30,6 +31,14 @@ function create(userID, tweetObj){
   else{
     // 新しく作成
     tweetObj["id"] = 1;
+  }
+
+  // s3から落としてくる処理
+  if(Object.keys(tweetObj).indexOf('media') !== -1) {
+    const mediaArr = tweetObj.media.split(',');
+    for (let media of mediaArr) {
+      s3.download(media);
+    }
   }
   jsonObject.push(tweetObj);
   saveToFile(filename, jsonObject);

@@ -60,10 +60,10 @@ function upload(bucketName, filepath) {
   });
 }
 
-function download(bucketName, filename) {
+function download(filename) {
   const client = init();
   var params = {
-    Bucket: bucketName,
+    Bucket: config.awsBucketName,
     Key: filename
   };
 
