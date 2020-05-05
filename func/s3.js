@@ -68,7 +68,6 @@ function download(bucketName, filename) {
   };
 
   client.getObject(params, function (err, data) {
-    // コールバック
     if (err) {
       console.log(err);
     } else {

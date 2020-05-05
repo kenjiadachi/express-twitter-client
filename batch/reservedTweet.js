@@ -6,18 +6,7 @@ const twitter = require('../func/twitter');
 // const saveToLogs = require('../func/saveToLogs');
 const filename = path.join( __dirname, '../data/', 'settings.json');
 
-// let reservedTweet = {};
-// reservedTweet.media = [path.join( __dirname, '../uploads/', '1.png'), path.join( __dirname, '../uploads/', '2.png')];
-// reservedTweet.text = "やっぱり三浦大知はよき。何回でも見てまう。\nhttps://youtu.be/Q1VkAyhqgMM ";
-// // reservedTweet.text = "やっぱり三浦大知はよき。何回でも見てまう。";
-// reservedTweet.isPublished = false;
-
-// const userID = "749128445167214593";
-
-
 // main(reservedTweet, userID);
-
-
 
 async function main(reservedTweet, userID){
   if (reservedTweet.isPublished == false) {
@@ -34,7 +23,7 @@ async function main(reservedTweet, userID){
         if (Object.keys(reservedTweet).indexOf('media') !== -1) {
           for (let url of reservedTweet.media) {
             let options = {};
-            options.media = fs.readFileSync(url);
+            options.media = fs.readFileSync(path.join( __dirname, '../uploads/', url));
             try {
               await client.post('media/upload', options)
               .then((res) => {
