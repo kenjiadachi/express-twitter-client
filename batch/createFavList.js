@@ -8,7 +8,7 @@ const sleep = require('../func/sleep');
 
 const COUNT = 10;
 
-// createFavList();
+// main();
 
 async function main(){
   const filename = path.join( __dirname, '../data/', 'settings.json');

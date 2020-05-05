@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const s3 = require('./s3');
+const schedule = require('node-schedule');
+const reservedTweet = require('../batch/reservedTweet');
 
 function get(userID) {
   const filename = path.join( __dirname, '../data/reserved-tweets/', userID + '.json');
@@ -40,6 +42,18 @@ function create(userID, tweetObj){
       s3.download(media);
     }
   }
+
+  // scheduleJobに登録
+  if(Object.keys(tweetObj).indexOf('tweeted_at') !== -1) {
+    const tweetDate = new Date(tweetObj.tweeted_at);
+    // 毎週日曜日の2時にフォロー
+    console.log(tweetDate);
+    schedule.scheduleJob(tweetDate, () => {
+      reservedTweet.main(tweetObj, userID);
+    });
+  }
+
+
   jsonObject.push(tweetObj);
   saveToFile(filename, jsonObject);
   return jsonObject;

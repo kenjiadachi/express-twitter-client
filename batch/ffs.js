@@ -3,6 +3,8 @@ var fs = require('fs');
 const path = require('path');
 const ffs = require('../func/ffs');
 
+// main();
+
 async function main(){
   const filename = path.join( __dirname, '../data/', 'settings.json');
   if(fs.existsSync(filename)){

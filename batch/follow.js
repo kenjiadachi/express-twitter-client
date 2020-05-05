@@ -5,7 +5,7 @@ const saveToLogs = require('../func/saveToLogs');
 const diff = require('../func/diff');
 const COUNT = 3;
 
-// follow();
+// main();
 
 async function main(){
   const filename = path.join( __dirname, '../data/', 'settings.json');

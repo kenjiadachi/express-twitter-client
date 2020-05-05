@@ -3,13 +3,6 @@ const AWS = require('aws-sdk');
 const path = require('path');
 const fs = require('fs');
 
-// const filepath = path.join(__dirname, '../uploads/1.png');
-
-// getBucketList();
-// createBucket();
-// upload('test-bucket00000001', filepath);
-// download('test-bucket00000001', 'sample.png');
-
 function init() {
   const client = new AWS.S3({
     accessKeyId: config.awsAccessKey,
@@ -71,7 +64,6 @@ function download(filename) {
     if (err) {
       console.log(err);
     } else {
-      console.log(data.Body);
       fs.writeFileSync(path.join( __dirname, '../uploads/', filename), data.Body);
     }
   });
