@@ -9,6 +9,10 @@ https://apps.twitter.com/app/new
 exports.consumerKey = '';
 exports.consumerSecret = '';
 exports.callbackURL = '';
+exports.awsAccessKey = '';
+exports.awsAccessSecret = '';
+exports.awsRegion = '';
+exports.awsBucketName = '';
 ```
 
 
