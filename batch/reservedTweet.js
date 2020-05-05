@@ -21,7 +21,7 @@ async function main(reservedTweet, userID){
         let mediaIdArray = [];
 
         if (Object.keys(reservedTweet).indexOf('media') !== -1) {
-          for (let url of reservedTweet.media) {
+          for (let url of reservedTweet.media.split(',')) {
             let options = {};
             options.media = fs.readFileSync(path.join( __dirname, '../uploads/', url));
             try {
