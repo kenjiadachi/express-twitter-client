@@ -5,10 +5,14 @@ const diff = require('../func/diff');
 const twitter = require('../func/twitter');
 const saveToLogs = require('../func/saveToLogs');
 const filename = path.join( __dirname, '../data/', 'settings.json');
+const log4js = require('log4js');
+log4js.configure('./log4js.config.json');
+const systemLogger = log4js.getLogger('system');
 
 // main();
 
 async function main(){
+  systemLogger.info("unfollow start!");
   if(fs.existsSync(filename)){
     const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
     for(var item of jsonObject){
@@ -107,14 +111,14 @@ async function main(){
               saveToLogs.unfollow(item.id, res, obj.reason);
             });
           } catch (err) {
-            console.log(err);
+            systemLogger.error(err);
           }
         }
       }
     }
   }
   else{
-    console.log("json file does not exist");
+    systemLogger.warn("settings.json does not exist");
   }
 }
 

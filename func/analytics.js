@@ -1,6 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 const diff = require('./diff');
+const log4js = require('log4js');
+log4js.configure('./log4js.config.json');
+const systemLogger = log4js.getLogger('system');
 
 function fromWhich (userID) {
   let filename = `${userID}.json`;
@@ -9,10 +12,7 @@ function fromWhich (userID) {
   const result = {};
 
   if (fs.existsSync(filename)) {
-    console.log('json file exist');
-
     const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
-
     const obj = Object.values(jsonObject);
 
     // 最新の相互フォロー配列
@@ -58,7 +58,7 @@ function fromWhich (userID) {
     return result;
   }
 
-  console.log('json file does not exist');
+  systemLogger.warn("settings.json does not exist");
 }
 
 function follower_follower (userID) {
@@ -75,7 +75,6 @@ function follower_follower (userID) {
   result._50000 = [];
 
   if (fs.existsSync(filename)) {
-    console.log('json file exist');
     const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
     const obj = Object.values(jsonObject);
     const latest_followers = obj.slice(-1)[0].followers;
@@ -101,7 +100,7 @@ function follower_follower (userID) {
       }
     }
   } else {
-    console.log('json file does not exist');
+    systemLogger.warn("settings.json does not exist");
   }
   return result;
 }
@@ -120,7 +119,6 @@ function follower_tweet (userID) {
   result._50000 = [];
 
   if (fs.existsSync(filename)) {
-    console.log('json file exist');
     const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
     const obj = Object.values(jsonObject);
     const latest_followers = obj.slice(-1)[0].followers;
@@ -146,7 +144,7 @@ function follower_tweet (userID) {
       }
     }
   } else {
-    console.log('json file does not exist');
+    systemLogger.warn("settings.json does not exist");
   }
   return result;
 }
@@ -160,7 +158,6 @@ function isProtected (userID) {
   result.not_protected = [];
 
   if (fs.existsSync(filename)) {
-    console.log('json file exist');
     const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
     const obj = Object.values(jsonObject);
     const latest_followers = obj.slice(-1)[0].followers;
@@ -174,7 +171,7 @@ function isProtected (userID) {
       }
     }
   } else {
-    console.log('json file does not exist');
+    systemLogger.warn("settings.json does not exist");
   }
   return result;
 }
@@ -187,7 +184,6 @@ function isProtected (userID) {
   const result = {};
 
   if (fs.existsSync(filename)) {
-    console.log('json file exist');
     start_date = new Date(start_date);
     end_date = new Date(end_date);
     const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
@@ -207,7 +203,7 @@ function isProtected (userID) {
                 var searched_date = new Date(item2);
                 if (date < searched_date) {
                   if (Object.prototype.hasOwnProperty.call(jsonObject[item], 'deleted_followers')) {
-                    // console.log(Object.(jsonObject[item2]).deleted_followers);
+
                     // new_followerとdeleted_followerに重複があるかの確認
                     const same_id = [];
                     jsonObject[item2].deleted_followers.filter((x) => {
@@ -232,7 +228,7 @@ function isProtected (userID) {
       }
     }
   } else {
-    console.log('json file does not exist');
+    systemLogger.warn("settings.json does not exist");
   }
   return result;
 }
@@ -245,7 +241,6 @@ function isProtected (userID) {
   result.active = [];
   result.deactive = [];
   if (fs.existsSync(filename)) {
-    console.log('json file exist');
 
     const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
     const latest_follows = (Object.values(jsonObject)).slice(-1)[0].follows;
@@ -263,7 +258,7 @@ function isProtected (userID) {
       }
     }
   } else {
-    console.log('json file does not exist');
+    systemLogger.warn("settings.json does not exist");
   }
 
   return result;
@@ -296,12 +291,10 @@ function keywords_followbacks(userID) {
         follower: followedID,
         notFollower: unfollowedID,
       };
-      // console.log(resultObj);
-      //  resultObj["unfollower"] = unfollowedID;
       result.push(resultObj);
     }
   } else {
-    console.log('json file does not exist');
+    systemLogger.warn("settings.json does not exist");
   }
   return result;
 }

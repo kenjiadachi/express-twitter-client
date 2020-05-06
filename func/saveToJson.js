@@ -4,6 +4,10 @@ const fs = require('fs');
 const settings = path.join(__dirname, '../data/settings.json');
 const ffs = require('./ffs');
 
+const log4js = require('log4js');
+log4js.configure('./log4js.config.json');
+const systemLogger = log4js.getLogger('system');
+
 
 // token, tokenSecretを保存する
 async function tokens (userID, token, tokenSecret) {
@@ -12,7 +16,6 @@ async function tokens (userID, token, tokenSecret) {
   const date = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2) + " " + ("0" + now.getHours()).slice(-2) + ":" + ("0" + now.getMinutes()).slice(-2) + ":" + ("0" + now.getSeconds()).slice(-2);
 
   if (fs.existsSync(settings)) {
-    console.log('settings.json file exists.');
     jsonObject = JSON.parse(fs.readFileSync(settings, 'utf8'));
 
     const search = jsonObject.findIndex((v) => v.id === userID);
@@ -31,7 +34,7 @@ async function tokens (userID, token, tokenSecret) {
     }
   } else {
     // settings.jsonがないときの処理
-    console.log('settings.json file does not exist');
+    systemLogger.warn("settings.json does not exist");
     jsonObject.push({
       id: userID,
       token: token,
@@ -48,13 +51,11 @@ async function tokens (userID, token, tokenSecret) {
 function keywords (userID, keywords) {
   let jsonObject = [];
   if (fs.existsSync(settings)) {
-    console.log('settings.json file exists.');
     jsonObject = JSON.parse(fs.readFileSync(settings, 'utf8'));
 
     const search = jsonObject.findIndex((v) => v.id === userID);
 
     if (search != -1) {
-      console.log(jsonObject[search].keywords);
       jsonObject[search].keywords = keywords;
     } else {
       jsonObject.push({
@@ -64,12 +65,11 @@ function keywords (userID, keywords) {
     }
   } else {
     // settings.jsonがないときの処理
-    console.log('settings.json file does not exist');
+    systemLogger.warn("settings.json does not exist");
     jsonObject.push({
       id: userID,
       keywords,
     });
-    console.log(jsonObject);
   }
 
   saveToJson(settings, jsonObject);
@@ -79,13 +79,11 @@ function keywords (userID, keywords) {
  function message (userID, message, minFollower) {
   let jsonObject = [];
   if (fs.existsSync(settings)) {
-    console.log('settings.json file exists.');
     jsonObject = JSON.parse(fs.readFileSync(settings, 'utf8'));
 
     const search = jsonObject.findIndex((v) => v.id === userID);
 
     if (search != -1) {
-      console.log(jsonObject[search].message);
       jsonObject[search].message = message;
       jsonObject[search].minFollower = minFollower;
     } else {
@@ -97,7 +95,7 @@ function keywords (userID, keywords) {
     }
   } else {
     // settings.jsonがないときの処理
-    console.log('settings.json file does not exist');
+    systemLogger.warn("settings.json does not exist");
     jsonObject.push({
       id: userID,
       message,
@@ -113,13 +111,11 @@ function keywords (userID, keywords) {
  function accounts (userID, accounts) {
   let jsonObject = [];
   if (fs.existsSync(settings)) {
-    console.log('settings.json file exists.');
     jsonObject = JSON.parse(fs.readFileSync(settings, 'utf8'));
 
     const search = jsonObject.findIndex((v) => v.id === userID);
 
     if (search != -1) {
-      console.log(jsonObject[search].accounts);
       jsonObject[search].accounts = accounts;
     } else {
       jsonObject.push({
@@ -129,12 +125,11 @@ function keywords (userID, keywords) {
     }
   } else {
     // settings.jsonがないときの処理
-    console.log('settings.json file does not exist');
+    systemLogger.warn("settings.json does not exist");
     jsonObject.push({
       id: userID,
       accounts: accounts,
     });
-    console.log(jsonObject);
   }
 
   saveToJson(settings, jsonObject);
@@ -145,12 +140,12 @@ function saveToJson(filename, object) {
   fs.writeFile(filename, JSON.stringify(object), (err) => {
     // 書き出しに失敗した場合
     if (err) {
-      console.log(`エラーが発生しました。${err}`);
+      systemLogger.error(err);
       throw err;
     }
     // 書き出しに成功した場合
     else {
-      console.log('ファイルが正常に書き出しされました');
+      systemLogger.info(filename + ' is updated');
     }
   });
 }

@@ -6,6 +6,9 @@ const axios = require('axios');
 const twitter = require('../func/twitter');
 const format = require('../func/format');
 const filename = path.join( __dirname, '../data/', 'settings.json');
+const log4js = require('log4js');
+log4js.configure('./log4js.config.json');
+const systemLogger = log4js.getLogger('system');
 
 const now = new Date();
 const date = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2) + " " + ("0" + now.getHours()).slice(-2) + ":" + ("0" + now.getMinutes()).slice(-2) + ":" + ("0" + now.getSeconds()).slice(-2);
@@ -13,6 +16,7 @@ const date = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-
 // main();
 
 async function main(){
+  systemLogger.info("rss start!");
   let filepath = path.join( __dirname, '../data/rss');
   let fileList = [];
   fileList = fs.readdirSync(filepath);
@@ -66,10 +70,8 @@ async function main(){
           // diff_secがundifinedまたはupdate_frequencyがないまたは定義した秒数たっていれば
           if(typeof diff_sec === "undefined" || Object.keys(rssObject).indexOf('update_frequency') == -1 || diff_sec >= rssObject.update_frequency) {
 
-            // console.log(xmlfile.url);
             await axios.get(xmlfile.url)
             .then(response => {
-              // console.log(response.data);
               let options = {};
               options.object = true;
               json = parser.toJson(response.data, options);
@@ -84,7 +86,7 @@ async function main(){
               };
               newObj.push(resultObj);
             }).catch(err => {
-              console.log('err:', err);
+              systemLogger.error(err);
             });
           }
         }
@@ -101,18 +103,15 @@ async function main(){
               try {
                 await client.post('statuses/update', options)
                 .then((res) => {
-                  console.log(res);
+                  systemLogger.info(settingData.id + " tweets " + options.status);
                   item.tweet = format.tweet(res);
                 });
               } catch (err) {
-                console.log(err);
+                systemLogger.error(err);
               }
             }
           }
         }
-
-        // console.log(result);
-
         saveToJson(logsFileName, result.concat(newObj));
       }
     }
@@ -128,7 +127,7 @@ function todaysTweetCount(resultObj, newObj){
         if(now.getDate() == createdDate.getDate()){
           for(let newitem of item.newItems){
             if(Object.keys(newitem).indexOf('tweet') !== -1){
-                resultTweet += 1;
+              resultTweet += 1;
             }
           }
         }
@@ -138,7 +137,7 @@ function todaysTweetCount(resultObj, newObj){
   for(let item of newObj){
     for(let newitem of item.newItems){
       if(Object.keys(newitem).indexOf('tweet') !== -1){
-          resultTweet += 1;
+        resultTweet += 1;
       }
     }
   }
@@ -151,12 +150,12 @@ function saveToJson(filename, object) {
   fs.writeFile(filename, JSON.stringify(object), (err) => {
     // 書き出しに失敗した場合
     if (err) {
-      console.log(`エラーが発生しました。${err}`);
+      systemLogger.error(err);
       throw err;
     }
     // 書き出しに成功した場合
     else {
-      console.log('ファイルが正常に書き出しされました');
+      systemLogger.info(filename + ' is updated');
     }
   });
 }

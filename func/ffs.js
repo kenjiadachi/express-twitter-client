@@ -3,6 +3,9 @@ const path = require('path');
 const diff = require('./diff');
 const twitter = require('./twitter');
 const format = require('./format');
+const log4js = require('log4js');
+log4js.configure('./log4js.config.json');
+const systemLogger = log4js.getLogger('system');
 
 // 引数: オブジェクトの配列、オブジェクトの配列、String
 async function update (userID, token, tokenSecret) {
@@ -36,7 +39,7 @@ async function update (userID, token, tokenSecret) {
 
     saveToFfs(userID, followList, followerList);
   } catch (err) {
-    console.log(err);
+    systemLogger.error(err);
   }
 }
 
@@ -56,7 +59,6 @@ function get (userID, start_date, end_date) {
     ff_ratio: {},
   };
   if (fs.existsSync(filename)) {
-    console.log('json file exist');
     const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
     const key = Object.keys(jsonObject);
     // １日ずつ処理
@@ -89,7 +91,7 @@ function get (userID, start_date, end_date) {
       }
     }
   } else {
-    console.log('json file does not exist');
+    systemLogger.warn("settings.json does not exist");
   }
   return result;
 }
@@ -121,14 +123,12 @@ function saveToFfs(userID, followsObject, followersObject) {
 
   // そのユーザーのJsonファイルがあるかの確認
   if (fs.existsSync(filename)) {
-    console.log('json file exist');
     // jsonから日付取得,今日の日付のデータがあるかの確認
     var obj = JSON.parse(fs.readFileSync(filename, 'utf8'));
     const k = Object.keys(obj);
 
     if (k.indexOf(today) === -1) {
       // 今日のデータがない場合には、今日のデータ＆前日との比較データを追記
-      console.log("this is today's first data");
       const o = (Object.values(obj)).slice(-1)[0].follows;
       var diff_follow = diff.ObjectArrays(o, formattedFollows);
       const o2 = (Object.values(obj)).slice(-1)[0].followers;
@@ -153,7 +153,6 @@ function saveToFfs(userID, followsObject, followersObject) {
         ff_ratio: ratio.toFixed(2),
       };
     } else { // 今日のデータがあるときは何もしない
-      console.log("today's data is already existing.");
       jsonObject = obj;
     }
   } else { // ユーザーのJsonファイルがないときは新しく作成してデータ追加
@@ -177,12 +176,12 @@ function saveToJson(filename, object) {
   fs.writeFile(filename, JSON.stringify(object), (err) => {
     // 書き出しに失敗した場合
     if (err) {
-      console.log(`エラーが発生しました。${err}`);
+      systemLogger.error(err);
       throw err;
     }
     // 書き出しに成功した場合
     else {
-      console.log('ファイルが正常に書き出しされました');
+      systemLogger.info(filename + ' is updated');
     }
   });
 }

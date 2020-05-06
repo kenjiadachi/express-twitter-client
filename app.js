@@ -3,11 +3,11 @@ const express = require('express');
 const session = require('express-session');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const logger = require('morgan');
 const passport = require('passport');
 const TwitterStrategy = require('passport-twitter').Strategy;
 const config = require('./config');
 const saveToJson = require('./func/saveToJson');
+const log4js = require('log4js');
 
 // Twitterのテスト用
 // const twitterRouter = require('./routes/api/twitter');
@@ -26,12 +26,33 @@ const rssRouter = require('./routes/api/rss');
 let app = express();
 
 
+// logger setup
+log4js.configure('./log4js.config.json');
+const systemLogger = log4js.getLogger('system');
+const httpLogger = log4js.getLogger('http');
+const accessLogger = log4js.getLogger('access');
+app.use(log4js.connectLogger(accessLogger));
+app.use((req, res, next) => {
+  if (typeof req === 'undefined' || req === null ||
+    typeof req.method === 'undefined' || req.method === null ||
+    typeof req.header === 'undefined' || req.header === null) {
+    next();
+    return;
+  }
+  if (req.method === 'GET' || req.method === 'DELETE') {
+    httpLogger.info(req.query);
+  } else {
+    httpLogger.info(req.body);
+  }
+  next();
+});
+systemLogger.info("App start");
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

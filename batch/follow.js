@@ -4,10 +4,14 @@ const twitter = require('../func/twitter');
 const saveToLogs = require('../func/saveToLogs');
 const diff = require('../func/diff');
 const COUNT = 3;
+const log4js = require('log4js');
+log4js.configure('./log4js.config.json');
+const systemLogger = log4js.getLogger('system');
 
 // main();
 
 async function main(){
+  systemLogger.info("auto follow start!");
   const filename = path.join( __dirname, '../data/', 'settings.json');
   if(fs.existsSync(filename)){
     const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
@@ -59,7 +63,7 @@ async function main(){
                 }
               });
             } catch (err) {
-              console.log(err);
+              systemLogger.error(err);
             }
           }
         }
@@ -101,7 +105,7 @@ async function main(){
                   }
                 });
               } catch (err) {
-                console.log(err);
+                systemLogger.error(err);
               }
             }
           }
@@ -115,7 +119,6 @@ async function main(){
           let ffsObject = JSON.parse(fs.readFileSync(jsonfile, 'utf8'));
           let latest_follows = (Object.values(ffsObject)).slice(-1)[0].follows;
           let unfollowingUsers = diff.OnlyObject1(uniqueList, "userID", latest_follows, "id_str");
-          console.log(unfollowingUsers);
           // APIを叩く
           for (var obj of unfollowingUsers) {
             let options = {};
@@ -123,18 +126,18 @@ async function main(){
             try {
               await client.post('friendships/create', options)
               .then((res) => {
-                console.log("フォローしました！");
+                systemLogger.info(item.id + " follows " + obj.userID);
                 saveToLogs.follow (item.id, obj.keyword || null, obj.account || null, res);
               });
             } catch (err) {
-              console.log(err);
+              systemLogger.error(err);
             }
           }
         }
       }
     }
   } else {
-    console.log("json file does not exist");
+    systemLogger.warn("settings.json does not exist");
   }
 }
 

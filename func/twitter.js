@@ -3,6 +3,9 @@ const Twit = require('twit');
 const path = require('path');
 const fs = require('fs');
 const config = require('../config');
+const log4js = require('log4js');
+log4js.configure('./log4js.config.json');
+const systemLogger = log4js.getLogger('system');
 
 const settings = path.join(__dirname, '../data/settings.json');
 
@@ -11,7 +14,7 @@ function init(userId) {
   try {
     jsonObject = JSON.parse(fs.readFileSync(settings, 'utf8'));
   } catch (err) {
-    console.log(`エラーが発生しました。${err}`);
+    systemLogger.error(err);
     throw err;
   }
 
@@ -43,7 +46,7 @@ function initByTwit(userID) {
   try {
     jsonObject = JSON.parse(fs.readFileSync(settings, 'utf8'));
   } catch (err) {
-    console.log(`エラーが発生しました。${err}`);
+    systemLogger.error(err);
     throw err;
   }
 

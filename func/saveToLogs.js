@@ -4,6 +4,9 @@ const format = require('./format');
 const now = new Date();
 const date = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2);
 const datetime = now.getFullYear() + "-" + ("0" + (now.getMonth()+1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2) + " " + ("0" + now.getHours()).slice(-2) + ":" + ("0" + now.getMinutes()).slice(-2) + ":" + ("0" + now.getSeconds()).slice(-2);
+const log4js = require('log4js');
+log4js.configure('./log4js.config.json');
+const systemLogger = log4js.getLogger('system');
 
 function follow (userID, keyword, accountID, user) {
   let jsonfile = path.join( __dirname, '../logs/follow-logs/', userID + '.json');
@@ -92,12 +95,12 @@ function saveToLogs(filename, object) {
   fs.writeFile(filename, JSON.stringify(object) , (err) => {
     // 書き出しに失敗した場合
     if(err){
-      console.log("エラーが発生しました。" + err);
+      systemLogger.error(err);
       throw err;
     }
     // 書き出しに成功した場合
     else{
-      console.log("ファイルが正常に書き出しされました");
+      systemLogger.info(filename + ' is updated');
     }
   });
 }

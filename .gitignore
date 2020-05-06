@@ -5,6 +5,7 @@ npm-debug.log
 data/*
 
 logs/*
+log/*
 
 uploads/*
 

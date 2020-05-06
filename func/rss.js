@@ -1,5 +1,8 @@
 var fs = require('fs');
 const path = require('path');
+const log4js = require('log4js');
+log4js.configure('./log4js.config.json');
+const systemLogger = log4js.getLogger('system');
 
 function get(userID) {
   const filename = path.join( __dirname, '../data/rss/', userID + '.json');
@@ -47,7 +50,7 @@ function deleteObj(userID, objID){
     return result;
   }
   else {
-    console.log('json file does not exist');
+    systemLogger.warn("settings.json does not exist");
   }
 }
 
@@ -56,12 +59,12 @@ function saveToFile(filename, object) {
   fs.writeFile(filename, JSON.stringify(object) , (err) => {
     // 書き出しに失敗した場合
     if(err){
-      console.log("エラーが発生しました。" + err);
+      systemLogger.error(err);
       throw err;
     }
     // 書き出しに成功した場合
     else{
-      console.log("ファイルが正常に書き出しされました");
+      systemLogger.info(filename + ' is updated');
     }
   });
 }

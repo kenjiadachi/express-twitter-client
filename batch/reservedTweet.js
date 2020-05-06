@@ -1,14 +1,16 @@
 
 var fs = require('fs');
 const path = require('path');
-// const diff = require('../func/diff');
 const twitter = require('../func/twitter');
-// const saveToLogs = require('../func/saveToLogs');
 const filename = path.join( __dirname, '../data/', 'settings.json');
+const log4js = require('log4js');
+log4js.configure('./log4js.config.json');
+const systemLogger = log4js.getLogger('system');
 
 // main(reservedTweet, userID);
 
 async function main(reservedTweet, userID){
+  systemLogger.info("reservedTweet start!");
   const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
   // もし、settings.jsonのなかに、jsonFileの名前がIDとして存在すれば
   if(jsonObject.findIndex((v) => v.id === userID) != -1) {
@@ -26,11 +28,11 @@ async function main(reservedTweet, userID){
           try {
             await client.post('media/upload', options)
             .then((res) => {
-              console.log(res);
+              systemLogger.info(userID + " uploads media " + url);
               mediaIdArray.push(res.media_id_string);
             });
           } catch (err) {
-            console.log(err);
+            systemLogger.error(err);
           }
         }
       }
@@ -40,11 +42,11 @@ async function main(reservedTweet, userID){
       options.status = reservedTweet.text;
       try {
         await client.post('statuses/update', options)
-        .then((res) => {
-          console.log(res);
+        .then(() => {
+          systemLogger.info(userID + " tweets " + reservedTweet.text);
         });
       } catch (err) {
-        console.log(err);
+        systemLogger.error(err);
       }
     }
   }

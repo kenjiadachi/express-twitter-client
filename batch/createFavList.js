@@ -5,12 +5,16 @@ const format = require('../func/format');
 const twitter = require('../func/twitter');
 const saveToLogs = require('../func/saveToLogs');
 const sleep = require('../func/sleep');
+const log4js = require('log4js');
+log4js.configure('./log4js.config.json');
+const systemLogger = log4js.getLogger('system');
 
 const COUNT = 10;
 
 // main();
 
 async function main(){
+  systemLogger.info("createFavList start!");
   const filename = path.join( __dirname, '../data/', 'settings.json');
   if(fs.existsSync(filename)){
     const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
@@ -49,7 +53,7 @@ async function main(){
                 forLogs.push(logObj);
               });
             } catch (err) {
-              console.log(err);
+              systemLogger.error(err);
             }
           }
           saveToLogs.followerLikes(item.id, forLogs);
@@ -57,7 +61,7 @@ async function main(){
       }
     }
   } else {
-    console.log("json file does not exist");
+    systemLogger.warn("settings.json does not exist");
   }
 }
 

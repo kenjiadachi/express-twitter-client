@@ -4,6 +4,9 @@ const router = express.Router();
 const url = require('url');
 const twitter = require('../../func/twitter');
 const sort = require('../../func/sort');
+const log4js = require('log4js');
+log4js.configure('./log4js.config.json');
+const systemLogger = log4js.getLogger('system');
 
 let urlInfo;
 
@@ -36,8 +39,8 @@ router.get('/sum', (req, res) => {
 
       res.json(sortedFilteredTweets);
     })
-    .catch((error) => {
-      console.log(error);
+    .catch((err) => {
+      systemLogger.error(err);
     });
 });
 
@@ -69,8 +72,8 @@ router.get('/rt', (req, res) => {
 
       res.json(sortedFilteredTweets);
     })
-    .catch((error) => {
-      console.log(error);
+    .catch((err) => {
+      systemLogger.error(err);
     });
 });
 
@@ -102,8 +105,8 @@ router.get('/like', (req, res) => {
 
       res.json(sortedFilteredTweets);
     })
-    .catch((error) => {
-      console.log(error);
+    .catch((err) => {
+      systemLogger.error(err);
     });
 });
 

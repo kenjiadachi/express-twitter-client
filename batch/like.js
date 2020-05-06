@@ -3,10 +3,14 @@ const path = require('path');
 const twitter = require('../func/twitter');
 const saveToLogs = require('../func/saveToLogs');
 const COUNT = 3;
+const log4js = require('log4js');
+log4js.configure('./log4js.config.json');
+const systemLogger = log4js.getLogger('system');
 
 // main();
 
 async function main(){
+  systemLogger.info("auto like start!");
   const filename = path.join( __dirname, '../data/', 'settings.json');
   if(fs.existsSync(filename)){
     const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
@@ -59,7 +63,7 @@ async function main(){
                 }
               });
             } catch (err) {
-              console.log(err);
+              systemLogger.error(err);
             }
           }
         }
@@ -69,7 +73,6 @@ async function main(){
             let jsonfile = path.join( __dirname, '../data/ffs/', account + '.json');
             if(fs.existsSync(jsonfile)){
                 // ffsにid.jsonがあれば最新のfollowerを取得してforAPIListに追加
-                console.log(jsonfile);
                 let ffsObject = JSON.parse(fs.readFileSync(jsonfile, 'utf8'));
                 let latest_followers = (Object.values(ffsObject)).slice(-1)[0].followers;
                 for (let i of latest_followers){
@@ -101,14 +104,13 @@ async function main(){
                   }
                 });
               } catch (err) {
-                console.log(err);
+                systemLogger.error(err);
               }
             }
           }
         }
         // ここでListに対してAPI叩く
         const uniqueList = filterUniqueItemsByTweetID(forAPIlist);
-        console.log(uniqueList);
         let jsonfile = path.join( __dirname, '../data/ffs/', item.id + '.json');
         if(fs.existsSync(jsonfile)){
           // APIを叩く
@@ -118,11 +120,11 @@ async function main(){
             try {
               await client.post('favorites/create', options)
               .then((res) => {
-                console.log("いいねしました！");
+                systemLogger.info(item.id + " likes " + obj.tweetID);
                 saveToLogs.like (item.id, obj.keyword || null, obj.account || null, res);
               });
             } catch (err) {
-              console.log(err);
+              systemLogger.error(err);
             }
           }
         }
@@ -130,7 +132,7 @@ async function main(){
     }
   }
   else{
-    console.log("json file does not exist");
+    systemLogger.warn("settings.json does not exist");
   }
 }
 

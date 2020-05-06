@@ -5,10 +5,14 @@ const twitter = require('../func/twitter');
 const diff = require('../func/diff');
 const saveToLogs = require('../func/saveToLogs');
 const COUNT = 3;
+const log4js = require('log4js');
+log4js.configure('./log4js.config.json');
+const systemLogger = log4js.getLogger('system');
 
 // main();
 
 async function main(){
+  systemLogger.info("sendDM start!");
   const filename = path.join( __dirname, '../data/', 'settings.json');
   if(fs.existsSync(filename)){
     const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
@@ -62,7 +66,7 @@ async function main(){
                 }
               });
             } catch (err) {
-              console.log(err);
+              systemLogger.error(err);
             }
           }
         }
@@ -101,18 +105,18 @@ async function main(){
             try {
               await client2.post('direct_messages/events/new', options)
               .then((res) => {
-                console.log("DMしました！");
+                systemLogger.info(item.id + " send DM for " + obj.userID);
                 saveToLogs.dm (item.id, obj.keyword, item.message, res);
               });
             } catch (err) {
-              console.log(err);
+              systemLogger.error(err);
             }
           }
         }
       }
     }
   } else{
-    console.log("json file does not exist");
+    systemLogger.warn("settings.json does not exist");
   }
 }
 
