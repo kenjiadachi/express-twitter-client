@@ -55,8 +55,6 @@ async function main(){
               marged_ids.push([]);
             }
           }
-          // console.log(user_ids);
-          console.log(marged_ids);
 
           var resultArr =  marged_ids.reduce(function(previousValue, currentValue) {
             //比較したい配列をreduceで結合して1つにまとめる
@@ -75,8 +73,6 @@ async function main(){
 
             return flg;
           });
-          console.log(resultArr);
-          console.log(followed);
 
           if(resultArr != []){
             for (var items of resultArr){
@@ -103,7 +99,7 @@ async function main(){
 
         for(var obj of forAPIlist){
           let options = {};
-          options.user_id = obj.id_str;
+          options.user_id = obj.userID;
           // APIを叩く
           try {
             await client.post('friendships/destroy', options)

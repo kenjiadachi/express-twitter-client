@@ -46,9 +46,9 @@ function create(userID, tweetObj){
   // scheduleJobに登録
   if(Object.keys(tweetObj).indexOf('tweeted_at') !== -1) {
     const tweetDate = new Date(tweetObj.tweeted_at);
-    // 毎週日曜日の2時にフォロー
-    console.log(tweetDate);
-    schedule.scheduleJob(tweetDate, () => {
+    const uniqueName = userID + tweetObj.tweeted_at + Math.random().toString(32).substring(2);
+    tweetObj.jobName = uniqueName;
+    schedule.scheduleJob(uniqueName, tweetDate, () => {
       reservedTweet.main(tweetObj, userID);
     });
   }
@@ -63,6 +63,15 @@ function deleteObj (userID, objID){
   const filename = path.join( __dirname, '../data/reserved-tweets/', userID + '.json');
   if(fs.existsSync(filename)){
     const jsonObject = JSON.parse(fs.readFileSync(filename, 'utf8'));
+
+    // scheduleJobのキャンセル
+    if (jsonObject.findIndex((v) => v.id === objID) != -1) {
+      let tmpObj = jsonObject.find((v) => v.id === objID);
+      if(Object.keys(tmpObj).indexOf('jobName') !== -1) {
+        schedule.scheduledJobs[tmpObj.jobName].cancel();
+      }
+    }
+    
     let result = jsonObject.filter(function(item) {
       return item.id != objID;
     });
