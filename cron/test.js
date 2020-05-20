@@ -49,7 +49,7 @@ schedule.scheduleJob('0 25 * * * *', () => {
 });
 
 // 30分おきにrss実行
-schedule.scheduleJob('* */30 * * * *', () => {
+schedule.scheduleJob('0 */30 * * * *', () => {
   systemLogger.info("cron/rss start!");
   rss.main();
 });
