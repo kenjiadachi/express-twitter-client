@@ -16,6 +16,7 @@ exports.awsAccessKey = '';
 exports.awsAccessSecret = '';
 exports.awsRegion = '';
 exports.awsBucketName = '';
+exports.adminCode = '';
 ```
 
 - create dirs
