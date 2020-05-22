@@ -22,6 +22,7 @@ const analyticsRouter = require('./routes/api/analytics');
 const ffsRouter = require('./routes/api/ffs');
 const reservedTweetsRouter = require('./routes/api/reservedTweets');
 const rssRouter = require('./routes/api/rss');
+const adminRouter = require('./routes/api/admin');
 
 let app = express();
 
@@ -110,6 +111,9 @@ app.use('/api/rss', rssRouter);
 app.use('/api/hot-tweets', hotTweetsRouter);
 app.use('/api/ffs', ffsRouter);
 app.use('/api/analytics', analyticsRouter);
+
+// admin用
+app.use('/api/admin', adminRouter);
 
 // 認証
 app.get('/auth/twitter', passport.authenticate('twitter'));
